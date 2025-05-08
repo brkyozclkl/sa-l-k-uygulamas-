@@ -58,21 +58,6 @@
                                     <option value="diğer" {% if complaint == 'diğer' %}selected{% endif %}>Diğer</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="city" class="form-label">Şehir</label>
-                                <select class="form-select" id="city" name="city" required>
-                                    <option value="">Şehir Seçiniz</option>
-                                    <option value="İstanbul" {% if city == 'İstanbul' %}selected{% endif %}>İstanbul</option>
-                                    <option value="Ankara" {% if city == 'Ankara' %}selected{% endif %}>Ankara</option>
-                                    <option value="İzmir" {% if city == 'İzmir' %}selected{% endif %}>İzmir</option>
-                                    <option value="Bursa" {% if city == 'Bursa' %}selected{% endif %}>Bursa</option>
-                                    <option value="Adana" {% if city == 'Adana' %}selected{% endif %}>Adana</option>
-                                    <option value="Antalya" {% if city == 'Antalya' %}selected{% endif %}>Antalya</option>
-                                    <option value="Konya" {% if city == 'Konya' %}selected{% endif %}>Konya</option>
-                                    <option value="Eskişehir" {% if city == 'Eskişehir' %}selected{% endif %}>Eskişehir</option>
-                                    <option value="Diğer" {% if city == 'Diğer' %}selected{% endif %}>Diğer</option>
-                                </select>
-                            </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Poliklinik Öner</button>
                             </div>
@@ -80,31 +65,44 @@
                     </div>
                 </div>
                 <!-- Recommended Clinic Card (dynamic) -->
-                {% if recommended_clinics %}
-                {% if city %}
-                <div class="mb-2 text-center">
-                    <span class="badge bg-primary bg-gradient">Seçilen Şehir: {{ city }}</span>
-                </div>
-                {% endif %}
+                {% if recommended_clinic %}
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
                         <div class="text-center mb-4">
                             <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mx-auto mb-3">
                                 <i class="fas fa-hospital-symbol"></i>
                             </div>
-                            <h3 class="h4 mb-3">Önerilen Poliklinikler</h3>
+                            <h3 class="h4 mb-3">Önerilen Poliklinik</h3>
+                            <p class="lead text-primary mb-0">{{ recommended_clinic }}</p>
                         </div>
                         <div class="row g-4 mt-2">
-                            {% for clinic in recommended_clinics %}
                             <div class="col-md-4">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-hospital text-primary me-2"></i>
+                                    <i class="fas fa-clock text-primary me-2"></i>
                                     <div>
-                                        <h6 class="mb-0">{{ clinic }}</h6>
+                                        <h6 class="mb-0">Çalışma Saatleri</h6>
+                                        <small class="text-muted">08:00 - 17:00</small>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">İletişim</h6>
+                                        <small class="text-muted">0212 123 45 67</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Konum</h6>
+                                        <small class="text-muted">Kat 3, B Blok</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
