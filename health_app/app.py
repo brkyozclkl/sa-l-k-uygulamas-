@@ -361,5 +361,59 @@ def blood_analysis():
 def doctor_recommendation():
     return render_template('doctor_recommendation.html')
 
+@app.route('/blood-test', methods=['GET', 'POST'])
+@login_required
+def blood_test():
+    if request.method == 'POST':
+        # Get form data
+        test_date = request.form.get('test_date')
+        
+        # Create a dictionary of all blood test results
+        results = {
+            'hemogram': {
+                'hgb': request.form.get('hgb'),
+                'hct': request.form.get('hct'),
+                'wbc': request.form.get('wbc'),
+                'rbc': request.form.get('rbc'),
+                'plt': request.form.get('plt'),
+                'mcv': request.form.get('mcv')
+            },
+            'biyokimya': {
+                'glucose': request.form.get('glucose'),
+                'urea': request.form.get('urea'),
+                'creatinine': request.form.get('creatinine'),
+                'alt': request.form.get('alt'),
+                'ast': request.form.get('ast'),
+                'cholesterol': request.form.get('cholesterol'),
+                'hdl': request.form.get('hdl'),
+                'ldl': request.form.get('ldl'),
+                'triglycerides': request.form.get('triglycerides')
+            },
+            'vitamin_mineral': {
+                'vitamin_d': request.form.get('vitamin_d'),
+                'vitamin_b12': request.form.get('vitamin_b12'),
+                'iron': request.form.get('iron'),
+                'ferritin': request.form.get('ferritin'),
+                'folic_acid': request.form.get('folic_acid')
+            }
+        }
+        
+        notes = request.form.get('notes')
+        
+        # Save to database
+        test_result = TestResult(
+            user_id=current_user.id,
+            date=datetime.strptime(test_date, '%Y-%m-%d'),
+            results_data=results,
+            recommendations=notes
+        )
+        db.session.add(test_result)
+        db.session.commit()
+        
+        flash('Tahlil sonuçları başarıyla kaydedildi.')
+        return redirect(url_for('dashboard'))
+    
+    return render_template('main/blood_test.html')
+
 if __name__ == '__main__':
     app.run(debug=True) 

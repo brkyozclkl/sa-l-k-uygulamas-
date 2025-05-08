@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Kan Tahlili Girişi - Sağlık Takip{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Kan Tahlili Girişi</h2>
+    <form method="POST" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="test_date" class="form-label">Tahlil Tarihi</label>
+            <input type="date" class="form-control" id="test_date" name="test_date" required>
+        </div>
+
+        <!-- Hemogram (Tam Kan Sayımı) -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Hemogram (Tam Kan Sayımı)</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="hgb" class="form-label">Hemoglobin (HGB)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="hgb" name="hgb" placeholder="13.5-17.5 g/dL">
+                            <span class="input-group-text">g/dL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="hct" class="form-label">Hematokrit (HCT)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="hct" name="hct" placeholder="38.8-50%">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="wbc" class="form-label">Beyaz Kan Hücresi (WBC)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="wbc" name="wbc" placeholder="4.5-11.0">
+                            <span class="input-group-text">10³/µL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="rbc" class="form-label">Kırmızı Kan Hücresi (RBC)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="rbc" name="rbc" placeholder="4.5-5.9">
+                            <span class="input-group-text">10⁶/µL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="plt" class="form-label">Trombosit (PLT)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="plt" name="plt" placeholder="150-450">
+                            <span class="input-group-text">10³/µL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="mcv" class="form-label">MCV</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="mcv" name="mcv" placeholder="80-100">
+                            <span class="input-group-text">fL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biyokimya -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Biyokimya</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="glucose" class="form-label">Glukoz (Açlık)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="glucose" name="glucose" placeholder="70-100">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="urea" class="form-label">Üre</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="urea" name="urea" placeholder="10-50">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="creatinine" class="form-label">Kreatinin</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="creatinine" name="creatinine" placeholder="0.7-1.3">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="alt" class="form-label">ALT (SGPT)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="alt" name="alt" placeholder="0-41">
+                            <span class="input-group-text">U/L</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="ast" class="form-label">AST (SGOT)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="ast" name="ast" placeholder="0-40">
+                            <span class="input-group-text">U/L</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="cholesterol" class="form-label">Kolesterol (Total)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="cholesterol" name="cholesterol" placeholder="<200">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="hdl" class="form-label">HDL Kolesterol</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="hdl" name="hdl" placeholder=">40">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="ldl" class="form-label">LDL Kolesterol</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="ldl" name="ldl" placeholder="<100">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="triglycerides" class="form-label">Trigliserit</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="triglycerides" name="triglycerides" placeholder="<150">
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vitamin ve Mineraller -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Vitamin ve Mineraller</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="vitamin_d" class="form-label">D Vitamini</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" class="form-control" id="vitamin_d" name="vitamin_d" placeholder="30-100">
+                            <span class="input-group-text">ng/mL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="vitamin_b12" class="form-label">B12 Vitamini</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="vitamin_b12" name="vitamin_b12" placeholder="200-900">
+                            <span class="input-group-text">pg/mL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="iron" class="form-label">Demir</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="iron" name="iron" placeholder="50-170">
+                            <span class="input-group-text">µg/dL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="ferritin" class="form-label">Ferritin</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="ferritin" name="ferritin" placeholder="30-400">
+                            <span class="input-group-text">ng/mL</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="folic_acid" class="form-label">Folik Asit</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="folic_acid" name="folic_acid" placeholder="2.7-17.0">
+                            <span class="input-group-text">ng/mL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="notes" class="form-label">Notlar</label>
+            <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>
+
+<style>
+.card {
+    border: none;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+}
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+</style>
+{% endblock %} 
