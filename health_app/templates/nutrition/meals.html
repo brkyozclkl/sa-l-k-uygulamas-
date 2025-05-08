@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Öğün Takibi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Günlük Öğün Takibi</h2>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <h5>Günlük Kalori Hedefi</h5>
+                        <div class="progress" style="height: 25px;">
+                            {% set percentage = (daily_totals.calories / daily_goal * 100)|round %}
+                            <div class="progress-bar {% if percentage > 100 %}bg-danger{% else %}bg-primary{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ percentage if percentage < 100 else 100 }}%"
+                                 aria-valuenow="{{ daily_totals.calories }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="{{ daily_goal }}">
+                                {{ daily_totals.calories }} / {{ daily_goal }} kcal
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Totals -->
+                    <div class="row text-center mb-4">
+                        <div class="col-md-3">
+                            <div class="dashboard-card">
+                                <h3>Kalori</h3>
+                                <p class="stats-counter">{{ daily_totals.calories|round }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card">
+                                <h3>Protein</h3>
+                                <p class="stats-counter">{{ daily_totals.protein|round }}g</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card">
+                                <h3>Karbonhidrat</h3>
+                                <p class="stats-counter">{{ daily_totals.carbs|round }}g</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card">
+                                <h3>Yağ</h3>
+                                <p class="stats-counter">{{ daily_totals.fat|round }}g</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Meal Form -->
+                    <form action="{{ url_for('add_meal') }}" method="POST" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="meal_type" class="form-label">Öğün</label>
+                                    <select class="form-select" id="meal_type" name="meal_type" required>
+                                        <option value="breakfast">Kahvaltı</option>
+                                        <option value="lunch">Öğle Yemeği</option>
+                                        <option value="dinner">Akşam Yemeği</option>
+                                        <option value="snack">Ara Öğün</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="food_name" class="form-label">Yiyecek/İçecek</label>
+                                    <input type="text" class="form-control" id="food_name" name="food_name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label for="calories" class="form-label">Kalori</label>
+                                    <input type="number" class="form-control" id="calories" name="calories" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label for="protein" class="form-label">Protein (g)</label>
+                                    <input type="number" class="form-control" id="protein" name="protein" step="0.1">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label for="carbs" class="form-label">Karbonhidrat (g)</label>
+                                    <input type="number" class="form-control" id="carbs" name="carbs" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label for="fat" class="form-label">Yağ (g)</label>
+                                    <input type="number" class="form-control" id="fat" name="fat" step="0.1">
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="mb-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Öğün Ekle
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Meals List -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Öğün</th>
+                                    <th>Yiyecek/İçecek</th>
+                                    <th>Kalori</th>
+                                    <th>Protein</th>
+                                    <th>Karbonhidrat</th>
+                                    <th>Yağ</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for meal in meals %}
+                                <tr>
+                                    <td>
+                                        {% if meal.meal_type == 'breakfast' %}
+                                            Kahvaltı
+                                        {% elif meal.meal_type == 'lunch' %}
+                                            Öğle Yemeği
+                                        {% elif meal.meal_type == 'dinner' %}
+                                            Akşam Yemeği
+                                        {% else %}
+                                            Ara Öğün
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ meal.food_name }}</td>
+                                    <td>{{ meal.calories|round }}</td>
+                                    <td>{{ meal.protein|round if meal.protein else '-' }}</td>
+                                    <td>{{ meal.carbs|round if meal.carbs else '-' }}</td>
+                                    <td>{{ meal.fat|round if meal.fat else '-' }}</td>
+                                    <td>
+                                        <form action="{{ url_for('delete_meal', meal_id=meal.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bu öğünü silmek istediğinizden emin misiniz?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Hızlı Erişim</h3>
+                    <div class="list-group">
+                        <a href="{{ url_for('calorie_calculator') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-calculator me-2"></i>Kalori Hesaplayıcı
+                        </a>
+                        <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user me-2"></i>Profil Bilgileri
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

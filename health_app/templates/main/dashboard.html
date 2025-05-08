@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sağlık Takip{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <h3>Hoş Geldiniz, {{ current_user.name }}</h3>
+                <p>Son giriş: {{ current_user.last_login.strftime('%d.%m.%Y %H:%M') if current_user.last_login else 'İlk giriş' }}</p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="dashboard-card">
+                <h3>Sağlık Özeti</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Yaş:</strong> {{ current_user.age or 'Belirtilmemiş' }}</p>
+                        <p><strong>Cinsiyet:</strong> {{ current_user.gender or 'Belirtilmemiş' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Kilo:</strong> {{ current_user.weight or 'Belirtilmemiş' }} kg</p>
+                        <p><strong>Boy:</strong> {{ current_user.height or 'Belirtilmemiş' }} cm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <h3>Son Tahlil Sonuçları</h3>
+                {% if current_user.test_results %}
+                    {% for result in current_user.test_results[-3:] %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ result.date.strftime('%d.%m.%Y') }}</h5>
+                                <p class="card-text">
+                                    {% if result.recommendations %}
+                                        {{ result.recommendations[:100] }}...
+                                    {% else %}
+                                        Henüz analiz edilmedi
+                                    {% endif %}
+                                </p>
+                                <a href="#" class="btn btn-primary btn-sm">Detayları Gör</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Henüz tahlil sonucu yüklenmemiş.</p>
+                    <a href="{{ url_for('upload_test') }}" class="btn btn-primary">Tahlil Yükle</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <h3>Sağlık Önerileri</h3>
+                {% if current_user.test_results and current_user.test_results[-1].recommendations %}
+                    <div class="alert alert-info">
+                        {{ current_user.test_results[-1].recommendations }}
+                    </div>
+                {% else %}
+                    <p>Tahlil sonuçlarınızı yükleyerek kişiselleştirilmiş sağlık önerileri alabilirsiniz.</p>
+                    <a href="{{ url_for('upload_test') }}" class="btn btn-primary">Tahlil Yükle</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

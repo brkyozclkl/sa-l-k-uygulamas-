@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Klinik Yönlendirme{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <!-- Left: Title, Description, Icons -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
+                    Klinik <span class="text-primary">Yönlendirme</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                    Tahlil sonuçlarınıza ve şikayetlerinize göre sizi en uygun polikliniğe yönlendiriyoruz. Sağlığınız için en doğru adresi bulmanıza yardımcı oluyoruz.
+                </p>
+                <div class="position-relative d-none d-lg-block">
+                    <div class="float-animation">
+                        <div class="hero-illustration">
+                            <div class="circle-bg bg-primary bg-opacity-10"></div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-notes-medical"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-effect p-3 rounded-4 shadow-sm mt-4">
+                    <i class="fas fa-info-circle fa-2x text-primary mb-2"></i>
+                    <h5 class="h6 mb-1">Yönlendirme Bilgisi</h5>
+                    <p class="text-muted small mb-0">
+                        Size en uygun poliklinik ve randevu bilgileri aşağıda listelenmiştir. Detaylı bilgi ve hızlı randevu için ilgili butonları kullanabilirsiniz.
+                    </p>
+                </div>
+            </div>
+            <!-- Right: Complaint Form + Clinic Card and Actions -->
+            <div class="col-lg-6">
+                <!-- Complaint Selection Form -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <form method="POST" action="{{ url_for('clinic_referral') }}">
+                            <div class="mb-3">
+                                <label for="complaint" class="form-label">Şikayet Türü</label>
+                                <select class="form-select" id="complaint" name="complaint" required>
+                                    <option value="">Şikayetinizi Seçiniz</option>
+                                    <option value="karın ağrısı" {% if complaint == 'karın ağrısı' %}selected{% endif %}>Karın Ağrısı</option>
+                                    <option value="baş ağrısı" {% if complaint == 'baş ağrısı' %}selected{% endif %}>Baş Ağrısı</option>
+                                    <option value="nefes darlığı" {% if complaint == 'nefes darlığı' %}selected{% endif %}>Nefes Darlığı</option>
+                                    <option value="göğüs ağrısı" {% if complaint == 'göğüs ağrısı' %}selected{% endif %}>Göğüs Ağrısı</option>
+                                    <option value="ateş" {% if complaint == 'ateş' %}selected{% endif %}>Ateş</option>
+                                    <option value="cilt döküntüsü" {% if complaint == 'cilt döküntüsü' %}selected{% endif %}>Cilt Döküntüsü</option>
+                                    <option value="eklem ağrısı" {% if complaint == 'eklem ağrısı' %}selected{% endif %}>Eklem Ağrısı</option>
+                                    <option value="diğer" {% if complaint == 'diğer' %}selected{% endif %}>Diğer</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="city" class="form-label">Şehir</label>
+                                <select class="form-select" id="city" name="city" required>
+                                    <option value="">Şehir Seçiniz</option>
+                                    <option value="İstanbul" {% if city == 'İstanbul' %}selected{% endif %}>İstanbul</option>
+                                    <option value="Ankara" {% if city == 'Ankara' %}selected{% endif %}>Ankara</option>
+                                    <option value="İzmir" {% if city == 'İzmir' %}selected{% endif %}>İzmir</option>
+                                    <option value="Bursa" {% if city == 'Bursa' %}selected{% endif %}>Bursa</option>
+                                    <option value="Adana" {% if city == 'Adana' %}selected{% endif %}>Adana</option>
+                                    <option value="Antalya" {% if city == 'Antalya' %}selected{% endif %}>Antalya</option>
+                                    <option value="Konya" {% if city == 'Konya' %}selected{% endif %}>Konya</option>
+                                    <option value="Eskişehir" {% if city == 'Eskişehir' %}selected{% endif %}>Eskişehir</option>
+                                    <option value="Diğer" {% if city == 'Diğer' %}selected{% endif %}>Diğer</option>
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Poliklinik Öner</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Recommended Clinic Card (dynamic) -->
+                {% if recommended_clinics %}
+                {% if city %}
+                <div class="mb-2 text-center">
+                    <span class="badge bg-primary bg-gradient">Seçilen Şehir: {{ city }}</span>
+                </div>
+                {% endif %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mx-auto mb-3">
+                                <i class="fas fa-hospital-symbol"></i>
+                            </div>
+                            <h3 class="h4 mb-3">Önerilen Poliklinikler</h3>
+                        </div>
+                        <div class="row g-4 mt-2">
+                            {% for clinic in recommended_clinics %}
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-hospital text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">{{ clinic }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="glass-effect p-4 rounded-4 shadow-sm">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <a href="#" class="text-decoration-none">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-check text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Randevu Al</h6>
+                                        <small class="text-muted">Hızlı ve kolay</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="text-decoration-none">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-info-circle text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Bilgi Al</h6>
+                                        <small class="text-muted">Detaylı bilgi</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="text-decoration-none">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-question-circle text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">SSS</h6>
+                                        <small class="text-muted">Sık sorulan sorular</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .hero-illustration {
+        position: relative;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .circle-bg {
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .hero-illustration .feature-icon {
+        position: absolute;
+        z-index: 1;
+    }
+    .hero-illustration .feature-icon:nth-child(2) {
+        top: 10%;
+        left: 10%;
+        transform: rotate(-15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(3) {
+        top: 20%;
+        right: 10%;
+        transform: rotate(15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(4) {
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%) rotate(0deg);
+    }
+</style>
+{% endblock %} 

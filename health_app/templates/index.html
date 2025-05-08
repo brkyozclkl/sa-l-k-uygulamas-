@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa - Sağlık Takip{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5">
+    <div class="row align-items-center min-vh-75">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
+                Sağlığınızı <span class="text-primary">Akıllıca</span> Takip Edin
+            </h1>
+            <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                Tahlil sonuçlarınızı yükleyin, analiz edin ve sağlık durumunuzu takip edin. 
+                Yapay zeka destekli sağlık asistanımız size kişiselleştirilmiş öneriler sunar.
+            </p>
+            <div class="d-flex gap-3 animate__animated animate__fadeInLeft animate__delay-2s">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-chart-line me-2"></i>Dashboard'a Git
+                    </a>
+                    <a href="{{ url_for('calorie_calculator') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-calculator me-2"></i>Kalori Hesapla
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Hemen Başla
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="position-relative">
+                <div class="float-animation">
+                    <div class="hero-illustration">
+                        <div class="circle-bg bg-primary bg-opacity-10"></div>
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle-y">
+                    <div class="glass-effect p-3 rounded-4 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary p-2 me-3">
+                                <i class="fas fa-check text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Güvenli Analiz</h6>
+                                <small class="text-muted">%99.9 Doğruluk</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Özellikler</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3 class="h5 mb-3">Kalori Takibi</h3>
+                        <p class="text-muted mb-0">
+                            Günlük kalori ihtiyacınızı hesaplayın ve öğünlerinizi takip edin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                        <h3 class="h5 mb-3">Tahlil Yükleme</h3>
+                        <p class="text-muted mb-0">
+                            PDF formatındaki tahlil sonuçlarınızı kolayca yükleyin ve analiz edin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="h5 mb-3">Sağlık Takibi</h3>
+                        <p class="text-muted mb-0">
+                            Tahlil sonuçlarınızı zaman içinde takip edin ve değişimleri görün.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="h5 mb-3">Yapay Zeka Analizi</h3>
+                        <p class="text-muted mb-0">
+                            Yapay zeka destekli analiz ile kişiselleştirilmiş sağlık önerileri alın.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Nasıl Çalışır?</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                        <span class="h4 mb-0">1</span>
+                    </div>
+                    <h3 class="h5">Kayıt Olun</h3>
+                    <p class="text-muted">Hızlı ve ücretsiz kayıt olun</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                        <span class="h4 mb-0">2</span>
+                    </div>
+                    <h3 class="h5">Tahlil Yükleyin</h3>
+                    <p class="text-muted">PDF formatında tahlil sonuçlarınızı yükleyin</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                        <span class="h4 mb-0">3</span>
+                    </div>
+                    <h3 class="h5">Analiz Edin</h3>
+                    <p class="text-muted">Sonuçlarınızı detaylı olarak inceleyin</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                        <span class="h4 mb-0">4</span>
+                    </div>
+                    <h3 class="h5">Öneriler Alın</h3>
+                    <p class="text-muted">Kişiselleştirilmiş sağlık önerileri alın</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stats-counter mb-2">1000+</div>
+                        <p class="text-muted mb-0">Aktif Kullanıcı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stats-counter mb-2">5000+</div>
+                        <p class="text-muted mb-0">Analiz Edilen Tahlil</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stats-counter mb-2">98%</div>
+                        <p class="text-muted mb-0">Memnun Kullanıcı</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="mb-4">Sağlığınızı Takip Etmeye Başlayın</h2>
+                <p class="lead mb-4">Ücretsiz hesap oluşturun ve sağlığınızı akıllıca takip edin.</p>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Hemen Başla
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(255, 107, 107, 0.2);
+    }
+
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+
+    .hero-illustration {
+        position: relative;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .circle-bg {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .hero-illustration .feature-icon {
+        position: absolute;
+        z-index: 1;
+    }
+
+    .hero-illustration .feature-icon:nth-child(2) {
+        top: 20%;
+        left: 20%;
+        transform: rotate(-15deg);
+    }
+
+    .hero-illustration .feature-icon:nth-child(3) {
+        top: 30%;
+        right: 20%;
+        transform: rotate(15deg);
+    }
+
+    .hero-illustration .feature-icon:nth-child(4) {
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%) rotate(0deg);
+    }
+</style>
+{% endblock %} 

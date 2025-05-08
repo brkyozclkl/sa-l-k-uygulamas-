@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Kan Tahlili Analizi{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <!-- Left: Title, Description, Icons -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
+                    Kan Tahlili <span class="text-primary">Analizi</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                    Yapay zeka destekli sistemimiz, kan tahlili sonuçlarınızı analiz eder ve size detaylı bir sağlık raporu sunar.
+                </p>
+                <div class="position-relative d-none d-lg-block">
+                    <div class="float-animation">
+                        <div class="hero-illustration">
+                            <div class="circle-bg bg-primary bg-opacity-10"></div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-vial"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-effect p-3 rounded-4 shadow-sm mt-4">
+                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                    <h5 class="h6 mb-1">Analiz Sonucu</h5>
+                    <p class="text-muted small mb-0">
+                        Sonuçlarınız genel olarak normal aralıkta görünmektedir. Detaylı rapor için doktorunuza danışmanızı öneririz.
+                    </p>
+                </div>
+            </div>
+            <!-- Right: Analysis Results -->
+            <div class="col-lg-6">
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="card h-100 border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Hemoglobin</h3>
+                                <div class="stats-counter mb-2">{{ 13.8 + (range(0,3)|random) }}</div>
+                                <p class="text-muted mb-0">g/dL</p>
+                                <div class="progress mt-3" style="height: 4px;">
+                                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card h-100 border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                    <i class="fas fa-microscope"></i>
+                                </div>
+                                <h3 class="h5 mb-3">WBC</h3>
+                                <div class="stats-counter mb-2">{{ 6.2 + (range(0,2)|random) }}</div>
+                                <p class="text-muted mb-0">10³/µL</p>
+                                <div class="progress mt-3" style="height: 4px;">
+                                    <div class="progress-bar bg-success" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card h-100 border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                    <i class="fas fa-droplet"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Platelet</h3>
+                                <div class="stats-counter mb-2">{{ 250 + (range(0,50)|random) }}</div>
+                                <p class="text-muted mb-0">10³/µL</p>
+                                <div class="progress mt-3" style="height: 4px;">
+                                    <div class="progress-bar bg-success" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .stats-counter {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--bs-primary);
+    }
+    .hero-illustration {
+        position: relative;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .circle-bg {
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .hero-illustration .feature-icon {
+        position: absolute;
+        z-index: 1;
+    }
+    .hero-illustration .feature-icon:nth-child(2) {
+        top: 10%;
+        left: 10%;
+        transform: rotate(-15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(3) {
+        top: 20%;
+        right: 10%;
+        transform: rotate(15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(4) {
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%) rotate(0deg);
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Giriş Yap - Sağlık Takip{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <!-- Left: Welcome Text -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
+                    Hoş <span class="text-primary">Geldiniz</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                    Sağlık takip uygulamamıza giriş yapın ve sağlığınızı akıllıca yönetin.
+                </p>
+                <div class="position-relative d-none d-lg-block">
+                    <div class="float-animation">
+                        <div class="hero-illustration">
+                            <div class="circle-bg bg-primary bg-opacity-10"></div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Login Form -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mx-auto mb-3">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <h3 class="h4 mb-3">Giriş Yap</h3>
+                            <p class="text-muted mb-0">Hesabınıza giriş yapın</p>
+                        </div>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-danger">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        <form method="POST" action="{{ url_for('login') }}">
+                            <div class="mb-4">
+                                <label for="email" class="form-label">E-posta</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-envelope text-primary"></i>
+                                    </span>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Şifre</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-lock text-primary"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                                </button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Hesabınız yok mu? <a href="{{ url_for('register') }}" class="text-primary">Kayıt Olun</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .hero-illustration {
+        position: relative;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .circle-bg {
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .hero-illustration .feature-icon {
+        position: absolute;
+        z-index: 1;
+    }
+    .hero-illustration .feature-icon:nth-child(2) {
+        top: 10%;
+        left: 10%;
+        transform: rotate(-15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(3) {
+        top: 20%;
+        right: 10%;
+        transform: rotate(15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(4) {
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%) rotate(0deg);
+    }
+    .input-group-text {
+        border: none;
+    }
+    .form-control {
+        border-left: none;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+</style>
+{% endblock %} 
