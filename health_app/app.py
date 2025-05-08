@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime, date
 from dotenv import load_dotenv
-from utils.pdf_processor import PDFProcessor
 import math
 
 # Load environment variables
@@ -174,80 +173,6 @@ def login():
 @login_required
 def dashboard():
     return render_template('main/dashboard.html')
-
-@app.route('/upload', methods=['GET', 'POST'])
-@login_required
-def upload_test():
-    if request.method == 'POST':
-        if 'pdf_file' not in request.files:
-            flash('Dosya yüklenmedi')
-            return redirect(request.url)
-        
-        file = request.files['pdf_file']
-        if file.filename == '':
-            flash('Dosya seçilmedi')
-            return redirect(request.url)
-        
-        if file and file.filename.endswith('.pdf'):
-            # Get additional form data
-            test_date = request.form.get('test_date')
-            test_type = request.form.get('test_type')
-            notes = request.form.get('notes')
-            
-            # Ensure upload directory exists
-            upload_dir = os.path.join(app.root_path, 'static', 'uploads')
-            os.makedirs(upload_dir, exist_ok=True)
-            
-            # Save the file
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(upload_dir, filename)
-            file.save(filepath)
-            
-            try:
-                # Process the PDF
-                processor = PDFProcessor()
-                
-                # Extract text from PDF
-                text = processor.extract_text_from_pdf(filepath)
-                if not text:
-                    raise Exception("PDF'den metin çıkarılamadı")
-                
-                # Parse lab results
-                results = processor.parse_lab_results(text)
-                if not results:
-                    raise Exception("Tahlil sonuçları bulunamadı")
-                
-                # Generate recommendations
-                user_data = {
-                    'age': current_user.age,
-                    'gender': current_user.gender,
-                    'weight': current_user.weight,
-                    'height': current_user.height
-                }
-                recommendations = processor.analyze_results(results, user_data)
-                
-                # Save to database
-                test_result = TestResult(
-                    user_id=current_user.id,
-                    date=datetime.strptime(test_date, '%Y-%m-%d'),
-                    pdf_path=filename,
-                    results_data=results,
-                    recommendations='\n'.join(recommendations)
-                )
-                db.session.add(test_result)
-                db.session.commit()
-                
-                flash('Tahlil sonuçları başarıyla yüklendi ve analiz edildi')
-                return redirect(url_for('dashboard'))
-                
-            except Exception as e:
-                flash(f'Hata oluştu: {str(e)}')
-                return redirect(request.url)
-        else:
-            flash('Sadece PDF dosyaları kabul edilmektedir')
-            return redirect(request.url)
-    
-    return render_template('main/upload.html')
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required

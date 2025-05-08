@@ -365,11 +365,6 @@
                                 <i class="fas fa-utensils me-2"></i>Öğün Takibi
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'upload_test' %}active{% endif %}" href="{{ url_for('upload_test') }}">
-                                <i class="fas fa-upload me-2"></i>Tahlil Yükle
-                            </a>
-                        </li>
                         <!-- Akıllı Servisler Dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle {% if request.endpoint in ['doctor_recommendation', 'blood_analysis', 'clinic_referral'] %}active{% endif %}" href="#" id="smartServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
