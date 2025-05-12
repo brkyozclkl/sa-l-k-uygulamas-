@@ -360,32 +360,72 @@ def blood_analysis():
 
 @app.route('/doctor-recommendation', methods=['GET', 'POST'])
 def doctor_recommendation():
-    # Priority-ordered keyword-doctor mapping
+    # Priority-ordered keyword-doctor mapping with home remedies
     keyword_doctor_map = [
         (r'baş ağrısı|migren|başım ağrıyor|bas agrisi', {
             'name': 'Dr. Ahmet Can',
             'specialty': 'Nöroloji Uzmanı',
-            'rating': 4.6
+            'rating': 4.6,
+            'home_remedies': [
+                'Karanlık ve sessiz bir odada dinlenin',
+                'Bol su için',
+                'Başınıza soğuk kompres uygulayın',
+                'Stresten uzak durun',
+                'Düzenli uyku uyuyun'
+            ],
+            'recommendation': 'Baş ağrınızın şiddeti ve süresi önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir nöroloji uzmanına başvurmanızı öneririm. Ayrıca baş ağrınızın yanında bulantı, kusma veya görme bozukluğu gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
         }),
         (r'karın ağrısı|mide|ishal|kabızlık|karin agrisi|karin ağrısı', {
             'name': 'Dr. Ayşe Yılmaz',
             'specialty': 'Dahiliye Uzmanı',
-            'rating': 4.8
+            'rating': 4.8,
+            'home_remedies': [
+                'Hafif ve sindirimi kolay yiyecekler tüketin',
+                'Bol su için',
+                'Sıcak su torbası kullanın',
+                'Bitki çayları için (nane, papatya)',
+                'Dinlenin ve stresten uzak durun'
+            ],
+            'recommendation': 'Karın ağrınızın yeri ve şiddeti önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir dahiliye uzmanına başvurmanızı öneririm. Ayrıca ateş, bulantı, kusma gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
         }),
         (r'göğüs ağrısı|çarpıntı|kalp|nefes darlığı|gogus agrisi', {
             'name': 'Dr. Mehmet Demir',
             'specialty': 'Kardiyoloji Uzmanı',
-            'rating': 4.7
+            'rating': 4.7,
+            'home_remedies': [
+                'Dinlenin ve sakin kalın',
+                'Derin nefes alın',
+                'Stresten uzak durun',
+                'Sigara ve alkolden kaçının',
+                'Düzenli egzersiz yapın'
+            ],
+            'recommendation': 'Göğüs ağrısı ciddi bir belirti olabilir. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir kardiyoloji uzmanına başvurmanızı öneririm. Ayrıca nefes darlığı, çarpıntı gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
         }),
         (r'cilt|döküntü|kaşıntı|sivilce|egzama|leke', {
             'name': 'Dr. Zeynep Yıldız',
             'specialty': 'Dermatoloji Uzmanı',
-            'rating': 4.8
+            'rating': 4.8,
+            'home_remedies': [
+                'Cildinizi nemlendirin',
+                'Güneşten korunun',
+                'Hassas cilt ürünleri kullanın',
+                'Bol su için',
+                'Stresten uzak durun'
+            ],
+            'recommendation': 'Cilt sorunlarınızın şiddeti ve yaygınlığı önemli. Eğer sorun şiddetli ve yaygınsa, mutlaka bir dermatoloji uzmanına başvurmanızı öneririm. Ayrıca kaşıntı, yanma gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
         }),
         (r'diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık', {
             'name': 'Dr. Elif Kaya',
             'specialty': 'Endokrinoloji Uzmanı',
-            'rating': 4.9
+            'rating': 4.9,
+            'home_remedies': [
+                'Düzenli beslenin',
+                'Egzersiz yapın',
+                'Bol su için',
+                'Stresten uzak durun',
+                'Düzenli uyku uyuyun'
+            ],
+            'recommendation': 'Hormonal sorunlar ciddiye alınmalıdır. Eğer belirtileriniz şiddetli ve uzun süredir devam ediyorsa, mutlaka bir endokrinoloji uzmanına başvurmanızı öneririm. Ayrıca kilo kaybı, halsizlik gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
         }),
     ]
     all_doctors = [
@@ -397,15 +437,25 @@ def doctor_recommendation():
     ]
     matched_doctors = []
     complaint = None
+    home_remedies = []
+    doctor_recommendation = None
+    
     if request.method == 'POST':
         complaint = request.form.get('complaint', '').lower()
         for pattern, doc in keyword_doctor_map:
             if re.search(pattern, complaint):
                 matched_doctors = [doc]
+                home_remedies = doc.get('home_remedies', [])
+                doctor_recommendation = doc.get('recommendation', '')
                 break
     if not matched_doctors and request.method == 'POST':
         matched_doctors = all_doctors
-    return render_template('doctor_recommendation.html', complaint=complaint, matched_doctors=matched_doctors)
+        
+    return render_template('doctor_recommendation.html', 
+                         complaint=complaint, 
+                         matched_doctors=matched_doctors,
+                         home_remedies=home_remedies,
+                         doctor_recommendation=doctor_recommendation)
 
 @app.route('/blood-test', methods=['GET', 'POST'])
 @login_required
@@ -460,6 +510,10 @@ def blood_test():
         return redirect(url_for('dashboard'))
     
     return render_template('main/blood_test.html')
+
+@app.route('/kriz-analizleri')
+def kriz_analizleri():
+    return render_template('kriz_analizleri.html')
 
 if __name__ == '__main__':
     app.run(debug=True) 
