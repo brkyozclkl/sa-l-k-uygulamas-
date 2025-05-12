@@ -7,6 +7,7 @@ import os
 from datetime import datetime, date
 from dotenv import load_dotenv
 import math
+import re
 
 # Load environment variables
 load_dotenv()
@@ -357,9 +358,54 @@ def clinic_referral():
 def blood_analysis():
     return render_template('blood_analysis.html')
 
-@app.route('/doctor-recommendation')
+@app.route('/doctor-recommendation', methods=['GET', 'POST'])
 def doctor_recommendation():
-    return render_template('doctor_recommendation.html')
+    # Priority-ordered keyword-doctor mapping
+    keyword_doctor_map = [
+        (r'baş ağrısı|migren|başım ağrıyor|bas agrisi', {
+            'name': 'Dr. Ahmet Can',
+            'specialty': 'Nöroloji Uzmanı',
+            'rating': 4.6
+        }),
+        (r'karın ağrısı|mide|ishal|kabızlık|karin agrisi|karin ağrısı', {
+            'name': 'Dr. Ayşe Yılmaz',
+            'specialty': 'Dahiliye Uzmanı',
+            'rating': 4.8
+        }),
+        (r'göğüs ağrısı|çarpıntı|kalp|nefes darlığı|gogus agrisi', {
+            'name': 'Dr. Mehmet Demir',
+            'specialty': 'Kardiyoloji Uzmanı',
+            'rating': 4.7
+        }),
+        (r'cilt|döküntü|kaşıntı|sivilce|egzama|leke', {
+            'name': 'Dr. Zeynep Yıldız',
+            'specialty': 'Dermatoloji Uzmanı',
+            'rating': 4.8
+        }),
+        (r'diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık', {
+            'name': 'Dr. Elif Kaya',
+            'specialty': 'Endokrinoloji Uzmanı',
+            'rating': 4.9
+        }),
+    ]
+    all_doctors = [
+        {'name': 'Dr. Ayşe Yılmaz', 'specialty': 'Dahiliye Uzmanı', 'rating': 4.8},
+        {'name': 'Dr. Mehmet Demir', 'specialty': 'Kardiyoloji Uzmanı', 'rating': 4.7},
+        {'name': 'Dr. Elif Kaya', 'specialty': 'Endokrinoloji Uzmanı', 'rating': 4.9},
+        {'name': 'Dr. Ahmet Can', 'specialty': 'Nöroloji Uzmanı', 'rating': 4.6},
+        {'name': 'Dr. Zeynep Yıldız', 'specialty': 'Dermatoloji Uzmanı', 'rating': 4.8},
+    ]
+    matched_doctors = []
+    complaint = None
+    if request.method == 'POST':
+        complaint = request.form.get('complaint', '').lower()
+        for pattern, doc in keyword_doctor_map:
+            if re.search(pattern, complaint):
+                matched_doctors = [doc]
+                break
+    if not matched_doctors and request.method == 'POST':
+        matched_doctors = all_doctors
+    return render_template('doctor_recommendation.html', complaint=complaint, matched_doctors=matched_doctors)
 
 @app.route('/blood-test', methods=['GET', 'POST'])
 @login_required

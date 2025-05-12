@@ -382,6 +382,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'blood_test' %}active{% endif %}" href="{{ url_for('blood_test') }}">
+                                        <i class="fas fa-vial me-2"></i>Kan Tahlili Girişi
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item {% if request.endpoint == 'clinic_referral' %}active{% endif %}" href="{{ url_for('clinic_referral') }}">
                                         <i class="fas fa-hospital-user me-2"></i>Klinik Yönlendirme
                                     </a>
@@ -396,11 +401,6 @@
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="{{ url_for('profile') }}">
                                 <i class="fas fa-user me-2"></i>Profil
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'blood_test' %}active{% endif %}" href="{{ url_for('blood_test') }}">
-                                <i class="fas fa-vial me-2"></i>Kan Tahlili Girişi
                             </a>
                         </li>
                         <li class="nav-item">

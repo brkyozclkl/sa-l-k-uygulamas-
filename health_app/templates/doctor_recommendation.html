@@ -30,6 +30,13 @@
                         </div>
                     </div>
                 </div>
+                <form method="POST" action="{{ url_for('doctor_recommendation') }}" class="mb-4">
+                    <div class="mb-3">
+                        <label for="complaint" class="form-label">Şikayetiniz</label>
+                        <textarea class="form-control" id="complaint" name="complaint" rows="2" placeholder="Lütfen şikayetinizi yazınız...">{{ complaint or '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Doktor Öner</button>
+                </form>
                 <div class="glass-effect p-3 rounded-4 shadow-sm mt-4">
                     <i class="fas fa-info-circle fa-2x text-primary mb-2"></i>
                     <h5 class="h6 mb-1">Doktor Seçimi Hakkında</h5>
@@ -41,72 +48,37 @@
             <!-- Right: Doctor List -->
             <div class="col-lg-6">
                 <div class="row g-4">
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-user-md"></i>
-                                </div>
-                                <h3 class="h5 mb-3">Dr. Ayşe Yılmaz</h3>
-                                <p class="text-muted mb-2">Dahiliye Uzmanı</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="text-warning me-2">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
+                    {% if matched_doctors is defined and matched_doctors %}
+                        {% for doc in matched_doctors %}
+                        <div class="col-md-12">
+                            <div class="card h-100 border-0 shadow-sm mb-4">
+                                <div class="card-body p-4">
+                                    <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                        <i class="fas fa-user-md"></i>
                                     </div>
-                                    <span class="text-muted">4.8/5</span>
+                                    <h3 class="h5 mb-3">{{ doc.name }}</h3>
+                                    <p class="text-muted mb-2">{{ doc.specialty }}</p>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="text-warning me-2">
+                                            {% for i in range(1, doc.rating|int + 1) %}<i class="fas fa-star"></i>{% endfor %}
+                                            {% if doc.rating - (doc.rating|int) >= 0.5 %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                                        </div>
+                                        <span class="text-muted">{{ doc.rating }}/5</span>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary w-100">Randevu Al</a>
                                 </div>
-                                <a href="#" class="btn btn-outline-primary w-100">Randevu Al</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-user-md"></i>
-                                </div>
-                                <h3 class="h5 mb-3">Dr. Mehmet Demir</h3>
-                                <p class="text-muted mb-2">Kardiyoloji Uzmanı</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="text-warning me-2">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                    </div>
-                                    <span class="text-muted">4.7/5</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary w-100">Randevu Al</a>
-                            </div>
+                        {% endfor %}
+                    {% elif complaint %}
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">Uygun doktor bulunamadı. Tüm doktorlar listeleniyor.</div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-user-md"></i>
-                                </div>
-                                <h3 class="h5 mb-3">Dr. Elif Kaya</h3>
-                                <p class="text-muted mb-2">Endokrinoloji Uzmanı</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="text-warning me-2">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="text-muted">4.9/5</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary w-100">Randevu Al</a>
-                            </div>
+                    {% else %}
+                        <div class="col-md-12">
+                            <div class="alert alert-info">Lütfen şikayetinizi giriniz.</div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
