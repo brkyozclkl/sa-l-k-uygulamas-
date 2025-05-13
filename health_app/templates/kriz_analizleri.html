@@ -12,10 +12,78 @@
                         <i class="fas fa-heartbeat"></i>
                     </div>
                     <h1 class="display-5 fw-bold mb-3 text-danger">Kriz Analizleri</h1>
-                    <p class="lead mb-4">Yakında burada <b>kalp krizi</b>, <b>diyabet krizi</b> gibi acil durum analizleri ve önerileri yer alacak.<br>Model eğitimi tamamlandığında bu sayfa üzerinden hızlı analiz ve öneriler alabileceksiniz.</p>
+                    
+                    <!-- Diabetes Prediction Form -->
+                    <div class="mt-4">
+                        <h3 class="mb-4">Diyabet Riski Analizi</h3>
+                        <form method="POST" action="{{ url_for('kriz_analizleri') }}">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="pregnancies" class="form-label">Hamilelik Sayısı</label>
+                                    <input type="number" class="form-control" id="pregnancies" name="pregnancies" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="glucose" class="form-label">Glikoz Seviyesi</label>
+                                    <input type="number" class="form-control" id="glucose" name="glucose" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="blood_pressure" class="form-label">Kan Basıncı</label>
+                                    <input type="number" class="form-control" id="blood_pressure" name="blood_pressure" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="skin_thickness" class="form-label">Cilt Kalınlığı</label>
+                                    <input type="number" class="form-control" id="skin_thickness" name="skin_thickness" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="insulin" class="form-label">İnsülin Seviyesi</label>
+                                    <input type="number" class="form-control" id="insulin" name="insulin" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="bmi" class="form-label">Vücut Kitle İndeksi</label>
+                                    <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="diabetes_pedigree" class="form-label">Diyabet Soy Ağacı Fonksiyonu</label>
+                                    <input type="number" class="form-control" id="diabetes_pedigree" name="diabetes_pedigree" step="0.001" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="age" class="form-label">Yaş</label>
+                                    <input type="number" class="form-control" id="age" name="age" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-danger mt-3">Analiz Et</button>
+                        </form>
+                    </div>
+
+                    <!-- Results Section -->
+                    {% if prediction is defined %}
+                    <div class="mt-4">
+                        <div class="alert {% if prediction == 1 %}alert-danger{% else %}alert-success{% endif %}">
+                            <h4 class="alert-heading">
+                                {% if prediction == 1 %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>Diyabet Riski Tespit Edildi
+                                {% else %}
+                                <i class="fas fa-check-circle me-2"></i>Diyabet Riski Tespit Edilmedi
+                                {% endif %}
+                            </h4>
+                            <p class="mb-0">
+                                {% if prediction == 1 %}
+                                Lütfen en kısa sürede bir sağlık kuruluşuna başvurunuz.
+                                {% else %}
+                                Şu an için diyabet riski görünmüyor, ancak düzenli kontrollerinizi aksatmayınız.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div class="alert alert-info mt-4">
                         <i class="fas fa-info-circle me-2"></i>
-                        Bu sayfa geliştirme aşamasındadır.
+                        Bu analiz sadece bir ön değerlendirmedir. Kesin teşhis için mutlaka bir sağlık kuruluşuna başvurunuz.
                     </div>
                 </div>
             </div>

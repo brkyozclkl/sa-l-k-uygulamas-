@@ -12,6 +12,7 @@ import pandas as pd
 import json
 import sqlite3
 from sqlalchemy import text
+import pickle
 
 # Load environment variables
 load_dotenv()
@@ -825,9 +826,32 @@ def blood_test_detail(test_id):
         return redirect(url_for('dashboard'))
     return render_template('main/blood_test_detail.html', test_result=test_result)
 
-@app.route('/kriz-analizleri')
+@app.route('/kriz-analizleri', methods=['GET', 'POST'])
 def kriz_analizleri():
-    return render_template('kriz_analizleri.html')
+    prediction = None
+    if request.method == 'POST':
+        try:
+            # Get form data
+            pregnancies = float(request.form.get('pregnancies'))
+            glucose = float(request.form.get('glucose'))
+            blood_pressure = float(request.form.get('blood_pressure'))
+            skin_thickness = float(request.form.get('skin_thickness'))
+            insulin = float(request.form.get('insulin'))
+            bmi = float(request.form.get('bmi'))
+            diabetes_pedigree = float(request.form.get('diabetes_pedigree'))
+            age = float(request.form.get('age'))
+
+            # Load the model
+            diabetes_model = pickle.load(open('saved_models/diabetes_model.sav', 'rb'))
+
+            # Make prediction
+            prediction = diabetes_model.predict([[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree, age]])[0]
+
+        except Exception as e:
+            flash(f'Bir hata oluştu: {str(e)}', 'error')
+            return redirect(url_for('kriz_analizleri'))
+
+    return render_template('kriz_analizleri.html', prediction=prediction)
 
 @app.route('/search-food', methods=['GET'])
 @login_required
