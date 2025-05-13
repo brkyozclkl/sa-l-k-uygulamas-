@@ -13,6 +13,30 @@
                     </div>
                     <h1 class="display-5 fw-bold mb-3 text-danger">Kriz Analizleri</h1>
 
+                    <!-- Kan Tahlili Seçimi -->
+                    <div class="mb-4">
+                        <h4 class="mb-3">Kan Tahlili Sonuçlarınızı Kullanın</h4>
+                        <form id="bloodTestForm" class="mb-4">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <select class="form-select" id="bloodTestSelect">
+                                        <option value="">Tahlil seçiniz...</option>
+                                        {% for test in blood_tests %}
+                                        <option value="{{ test.id }}" data-results='{{ test.results_data|tojson|safe }}'>
+                                            {{ test.date.strftime('%d.%m.%Y') }} - Tahlil Sonucu
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary w-100" onclick="loadBloodTestResults()">
+                                        <i class="fas fa-vial me-2"></i>Tahlil Sonuçlarını Yükle
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
                     <!-- Tab Navigation -->
                     <ul class="nav nav-tabs mb-4" id="predictionTabs" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -28,7 +52,7 @@
                         <!-- Diabetes Prediction Form -->
                         <div class="tab-pane fade show active" id="diabetes" role="tabpanel">
                             <h3 class="mb-4">Diyabet Riski Analizi</h3>
-                            <form method="POST" action="{{ url_for('kriz_analizleri') }}">
+                            <form method="POST" action="{{ url_for('kriz_analizleri') }}" id="diabetesForm">
                                 <input type="hidden" name="prediction_type" value="diabetes">
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
@@ -75,7 +99,7 @@
                         <!-- Heart Disease Prediction Form -->
                         <div class="tab-pane fade" id="heart" role="tabpanel">
                             <h3 class="mb-4">Kalp Hastalığı Riski Analizi</h3>
-                            <form method="POST" action="{{ url_for('kriz_analizleri') }}">
+                            <form method="POST" action="{{ url_for('kriz_analizleri') }}" id="heartForm">
                                 <input type="hidden" name="prediction_type" value="heart">
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
@@ -185,4 +209,81 @@
         </div>
     </div>
 </section>
+
+<script>
+function loadBloodTestResults() {
+    const select = document.getElementById('bloodTestSelect');
+    const selectedOption = select.options[select.selectedIndex];
+    
+    if (!selectedOption.value) {
+        alert('Lütfen bir tahlil seçiniz.');
+        return;
+    }
+    
+    try {
+        const results = JSON.parse(selectedOption.dataset.results);
+        console.log('Loaded test results:', results); // Debug için log
+        
+        // Diyabet formu için değerleri doldur
+        if (results.biyokimya) {
+            // Glikoz değerini al
+            const glucose = results.biyokimya.glucose;
+            if (glucose) {
+                document.getElementById('glucose').value = glucose;
+                console.log('Set glucose value:', glucose);
+            }
+            
+            // Kan basıncı değerini al (sistolik değeri kullan)
+            const bloodPressure = results.biyokimya.blood_pressure;
+            if (bloodPressure) {
+                document.getElementById('blood_pressure').value = bloodPressure;
+                console.log('Set blood pressure value:', bloodPressure);
+            }
+        }
+        
+        // Kalp hastalığı formu için değerleri doldur
+        if (results.biyokimya) {
+            // Kolesterol değerini al
+            const cholesterol = results.biyokimya.cholesterol;
+            if (cholesterol) {
+                document.getElementById('chol').value = cholesterol;
+                console.log('Set cholesterol value:', cholesterol);
+            }
+            
+            // Açlık kan şekeri değerini kontrol et ve ayarla
+            const glucose = results.biyokimya.glucose;
+            if (glucose) {
+                const fbsValue = parseFloat(glucose) > 120 ? 1 : 0;
+                document.getElementById('fbs').value = fbsValue;
+                console.log('Set FBS value:', fbsValue, 'based on glucose:', glucose);
+            }
+            
+            // Dinlenme kan basıncı değerini al
+            const bloodPressure = results.biyokimya.blood_pressure;
+            if (bloodPressure) {
+                document.getElementById('trestbps').value = bloodPressure;
+                console.log('Set resting blood pressure value:', bloodPressure);
+            }
+        }
+        
+        // Kullanıcıya bilgi ver
+        alert('Tahlil sonuçları forma yüklendi. Lütfen diğer değerleri de kontrol edip tamamlayınız.');
+        
+    } catch (error) {
+        console.error('Error loading blood test results:', error);
+        alert('Tahlil sonuçları yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.');
+    }
+}
+
+// Sayfa yüklendiğinde form değerlerini sıfırla
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = ['diabetesForm', 'heartForm'];
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.reset();
+        }
+    });
+});
+</script>
 {% endblock %} 

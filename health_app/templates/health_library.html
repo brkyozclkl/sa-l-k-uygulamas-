@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Sağlık Kütüphanesi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Sağlık Kütüphanesi</h1>
+    <div class="row g-4">
+        {% for c in contents %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <span class="badge bg-primary mb-2">{{ c.category }}</span>
+                    <h5 class="card-title">{{ c.title }}</h5>
+                    <p class="card-text">{{ c.desc }}</p>
+                    <div class="ratio ratio-16x9 mb-2">
+                        <iframe src="https://www.youtube.com/embed/{{ c.youtube }}" title="{{ c.title }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

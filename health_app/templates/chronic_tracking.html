@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Kronik Hastalık Takibi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Kronik Hastalık Takibi</h1>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Yeni Ölçüm Ekle</h5>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="disease_type" class="form-label">Hastalık Türü</label>
+                            <select class="form-select" id="disease_type" name="disease_type" required onchange="updateMeasurementFields()">
+                                <option value="diabetes">Diyabet</option>
+                                <option value="hypertension">Hipertansiyon</option>
+                                <option value="asthma">Astım</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="measurement_type" class="form-label">Ölçüm Türü</label>
+                            <select class="form-select" id="measurement_type" name="measurement_type" required>
+                                <option value="blood_glucose">Kan Şekeri (mg/dL)</option>
+                                <option value="blood_pressure">Tansiyon (mmHg)</option>
+                                <option value="peak_flow">Peak Flow (L/dk)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="value" class="form-label">Değer</label>
+                            <input type="text" class="form-control" id="value" name="value" required placeholder="70-130 mg/dL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Tarih</label>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ (request.form.date or '') or ('' if not measurements else measurements[0].date) }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Not</label>
+                            <textarea class="form-control" id="note" name="note" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Son Ölçümler</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Hastalık</th>
+                                    <th>Ölçüm</th>
+                                    <th>Değer</th>
+                                    <th>Not</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in measurements %}
+                                <tr>
+                                    <td>{{ m.date.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ m.disease_type|title }}</td>
+                                    <td>{{ m.measurement_type|replace('_', ' ')|title }}</td>
+                                    <td>{{ m.value }}</td>
+                                    <td>{{ m.note }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="5" class="text-center">Kayıt yok</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Gelişim Grafiği</h5>
+                    <canvas id="chronicChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function updateMeasurementFields() {
+    const disease = document.getElementById('disease_type').value;
+    const measurementType = document.getElementById('measurement_type');
+    const valueInput = document.getElementById('value');
+    if (disease === 'diabetes') {
+        measurementType.value = 'blood_glucose';
+        valueInput.placeholder = '70-130 mg/dL (ör: 110)';
+    } else if (disease === 'hypertension') {
+        measurementType.value = 'blood_pressure';
+        valueInput.placeholder = '90/60 - 140/90 mmHg (ör: 120/80)';
+    } else if (disease === 'asthma') {
+        measurementType.value = 'peak_flow';
+        valueInput.placeholder = '400-700 L/dk (ör: 500)';
+    }
+}
+// Sayfa yüklenince ilk değerleri ayarla
+updateMeasurementFields();
+// Grafik için veri çek
+fetch("{{ url_for('chronic_tracking_data') }}")
+    .then(resp => resp.json())
+    .then(data => {
+        // Ölçüm türlerine göre gruplama
+        const grouped = {};
+        data.forEach(item => {
+            const key = item.disease_type + ' - ' + item.measurement_type;
+            if (!grouped[key]) grouped[key] = {labels: [], values: []};
+            grouped[key].labels.push(item.date);
+            grouped[key].values.push(item.value);
+        });
+        // İlk grubu çiz
+        const firstKey = Object.keys(grouped)[0];
+        const ctx = document.getElementById('chronicChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: grouped[firstKey]?.labels || [],
+                datasets: [{
+                    label: firstKey || 'Ölçüm',
+                    data: grouped[firstKey]?.values || [],
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0,123,255,0.1)',
+                    tension: 0.2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {display: true}
+                },
+                scales: {
+                    y: {beginAtZero: false}
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 

@@ -501,19 +501,69 @@
                                 <i class="fas fa-chart-line me-2"></i>Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'calorie_calculator' %}active{% endif %}" href="{{ url_for('calorie_calculator') }}">
-                                <i class="fas fa-calculator me-2"></i>Kalori Hesapla
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'meals' %}active{% endif %}" href="{{ url_for('meals') }}">
-                                <i class="fas fa-utensils me-2"></i>Öğün Takibi
-                            </a>
-                        </li>
-                        <!-- Akıllı Servisler Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle {% if request.endpoint in ['doctor_recommendation', 'blood_analysis', 'clinic_referral', 'kriz_analizleri'] %}active{% endif %}" href="#" id="smartServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle {% if request.endpoint in ['health_journal', 'calorie_calculator', 'meals'] %}active{% endif %}" href="#" id="dailyTrackingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-calendar-check me-2"></i>Günlük Takip
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dailyTrackingDropdown">
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'health_journal' %}active{% endif %}" href="{{ url_for('health_journal') }}">
+                                        <i class="fas fa-book-medical me-2"></i>Kişisel Sağlık Günlüğü
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'calorie_calculator' %}active{% endif %}" href="{{ url_for('calorie_calculator') }}">
+                                        <i class="fas fa-calculator me-2"></i>Kalori Hesapla
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'meals' %}active{% endif %}" href="{{ url_for('meals') }}">
+                                        <i class="fas fa-utensils me-2"></i>Öğün Takibi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'health_goals' %}active{% endif %}" href="{{ url_for('health_goals') }}">
+                                        <i class="fas fa-bullseye me-2"></i>Sağlık Hedeflerim
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'mood_stress_test' %}active{% endif %}" href="{{ url_for('mood_stress_test') }}">
+                                        <i class="fas fa-smile-beam me-2"></i>Duygu & Stres Testi
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Tıbbi Analizler Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {% if request.endpoint in ['blood_test', 'kriz_analizleri', 'chronic_tracking'] %}active{% endif %}" href="#" id="medicalAnalysisDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-flask me-2"></i>Tıbbi Analizler
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="medicalAnalysisDropdown">
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'blood_test' %}active{% endif %}" href="{{ url_for('blood_test') }}">
+                                        <i class="fas fa-vial me-2"></i>Kan Tahlili Girişi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'kriz_analizleri' %}active{% endif %}" href="{{ url_for('kriz_analizleri') }}">
+                                        <i class="fas fa-heartbeat me-2"></i>Kriz Analizleri
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'chronic_tracking' %}active{% endif %}" href="{{ url_for('chronic_tracking') }}">
+                                        <i class="fas fa-notes-medical me-2"></i>Kronik Hastalık Takibi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.endpoint == 'health_trends' %}active{% endif %}" href="{{ url_for('health_trends') }}">
+                                        <i class="fas fa-chart-line me-2"></i>Sağlık Trendleri
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Akıllı Servisler Dropdown (daha sade) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {% if request.endpoint in ['doctor_recommendation', 'blood_analysis', 'clinic_referral', 'health_library'] %}active{% endif %}" href="#" id="smartServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-brain me-2"></i>Akıllı Servisler
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="smartServicesDropdown">
@@ -528,11 +578,6 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'blood_test' %}active{% endif %}" href="{{ url_for('blood_test') }}">
-                                        <i class="fas fa-vial me-2"></i>Kan Tahlili Girişi
-                                    </a>
-                                </li>
-                                <li>
                                     <a class="dropdown-item {% if request.endpoint == 'clinic_referral' %}active{% endif %}" href="{{ url_for('clinic_referral') }}">
                                         <i class="fas fa-hospital-user me-2"></i>Klinik Yönlendirme
                                     </a>
@@ -543,8 +588,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'kriz_analizleri' %}active{% endif %}" href="{{ url_for('kriz_analizleri') }}">
-                                        <i class="fas fa-heartbeat me-2"></i>Kriz Analizleri
+                                    <a class="dropdown-item {% if request.endpoint == 'health_library' %}active{% endif %}" href="{{ url_for('health_library') }}">
+                                        <i class="fas fa-book-open me-2"></i>Sağlık Kütüphanesi
                                     </a>
                                 </li>
                             </ul>

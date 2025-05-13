@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Kişisel Sağlık Günlüğü{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-primary">Kişisel Sağlık Günlüğü</h2>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="POST" class="row g-3">
+                <div class="col-md-2">
+                    <label for="date" class="form-label">Tarih</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="mood" class="form-label">Ruh Hali</label>
+                    <select class="form-select" id="mood" name="mood">
+                        <option value="">Seçiniz</option>
+                        <option>Çok iyi</option>
+                        <option>İyi</option>
+                        <option>Orta</option>
+                        <option>Kötü</option>
+                        <option>Çok kötü</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="sleep_hours" class="form-label">Uyku (saat)</label>
+                    <input type="number" step="0.1" class="form-control" id="sleep_hours" name="sleep_hours" placeholder="7.5">
+                </div>
+                <div class="col-md-2">
+                    <label for="exercise" class="form-label">Egzersiz</label>
+                    <input type="text" class="form-control" id="exercise" name="exercise" placeholder="Yürüyüş, yoga...">
+                </div>
+                <div class="col-md-2">
+                    <label for="nutrition" class="form-label">Beslenme</label>
+                    <input type="text" class="form-control" id="nutrition" name="nutrition" placeholder="Sebze, protein...">
+                </div>
+                <div class="col-md-2">
+                    <label for="complaints" class="form-label">Şikayetler</label>
+                    <input type="text" class="form-control" id="complaints" name="complaints" placeholder="Baş ağrısı, halsizlik...">
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Son 30 Günlük Kayıtlar</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Tarih</th>
+                    <th scope="col">Ruh Hali</th>
+                    <th scope="col">Uyku (saat)</th>
+                    <th scope="col">Egzersiz</th>
+                    <th scope="col">Beslenme</th>
+                    <th scope="col">Şikayetler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.date.strftime('%d.%m.%Y') }}</td>
+                    <td>
+                        {% if entry.mood == 'Çok iyi' %}<span class="badge bg-success">{{ entry.mood }}</span>
+                        {% elif entry.mood == 'İyi' %}<span class="badge bg-primary">{{ entry.mood }}</span>
+                        {% elif entry.mood == 'Orta' %}<span class="badge bg-warning text-dark">{{ entry.mood }}</span>
+                        {% elif entry.mood == 'Kötü' %}<span class="badge bg-danger">{{ entry.mood }}</span>
+                        {% elif entry.mood == 'Çok kötü' %}<span class="badge bg-dark">{{ entry.mood }}</span>
+                        {% else %}{{ entry.mood }}{% endif %}
+                    </td>
+                    <td>{{ entry.sleep_hours or '-' }}</td>
+                    <td>{{ entry.exercise or '-' }}</td>
+                    <td>{{ entry.nutrition or '-' }}</td>
+                    <td>{{ entry.complaints or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted">Kayıt bulunamadı.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

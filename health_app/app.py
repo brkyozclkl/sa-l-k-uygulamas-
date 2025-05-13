@@ -160,6 +160,56 @@ class Meal(db.Model):
     fat = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class HealthJournal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    mood = db.Column(db.String(50))
+    sleep_hours = db.Column(db.Float)
+    exercise = db.Column(db.String(200))
+    nutrition = db.Column(db.String(200))
+    complaints = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class ChronicMeasurement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
+    disease_type = db.Column(db.String(50), nullable=False)  # e.g. 'diabetes', 'hypertension', 'asthma'
+    measurement_type = db.Column(db.String(50), nullable=False)  # e.g. 'blood_glucose', 'blood_pressure', 'peak_flow'
+    value = db.Column(db.String(50), nullable=False)  # e.g. '120', '120/80', '400'
+    note = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class MoodStressTest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    mood_score = db.Column(db.Integer)
+    stress_score = db.Column(db.Integer)
+    result_json = db.Column(db.JSON)
+
+class HealthGoal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    steps = db.Column(db.Integer, default=8000)
+    water = db.Column(db.Float, default=2.0)  # litre
+    sleep = db.Column(db.Float, default=7.0)  # saat
+    weight = db.Column(db.Float, nullable=True)
+    calories = db.Column(db.Integer, nullable=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class HealthGoalEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.Date, default=date.today)
+    steps = db.Column(db.Integer)
+    water = db.Column(db.Float)
+    sleep = db.Column(db.Float)
+    weight = db.Column(db.Float)
+    calories = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 def init_db():
     # Create all tables
     db.create_all()
@@ -337,24 +387,36 @@ def update_activity_level():
 @app.route('/meals')
 @login_required
 def meals():
-    today = date.today()
-    meals = Meal.query.filter_by(user_id=current_user.id, date=today).all()
-    
-    # Calculate daily totals
+    # Tarih seçimi (varsayılan: bugün)
+    selected_date = request.args.get('date')
+    if selected_date:
+        try:
+            date_obj = datetime.strptime(selected_date, '%Y-%m-%d').date()
+        except Exception:
+            date_obj = date.today()
+    else:
+        date_obj = date.today()
+
+    # O güne ait öğünleri çek
+    meals = Meal.query.filter_by(user_id=current_user.id, date=date_obj).all()
+
+    # Günlük toplamlar ve hedefler
     daily_totals = {
         'calories': sum(meal.calories for meal in meals),
         'protein': sum(meal.protein or 0 for meal in meals),
         'carbs': sum(meal.carbs or 0 for meal in meals),
         'fat': sum(meal.fat or 0 for meal in meals)
     }
-    
     daily_goal = current_user.calculate_daily_calories()
-    
-    return render_template('nutrition/meals.html',
-                         meals=meals,
-                         daily_totals=daily_totals,
-                         daily_goal=daily_goal,
-                         food_db=FOOD_DB)
+
+    return render_template(
+        'nutrition/meals.html',
+        meals=meals,
+        daily_totals=daily_totals,
+        daily_goal=daily_goal,
+        food_db=FOOD_DB,
+        selected_date=date_obj
+    )
 
 @app.route('/add-meal', methods=['POST'])
 @login_required
@@ -366,15 +428,21 @@ def add_meal():
     protein = request.form.get('protein')
     carbs = request.form.get('carbs')
     fat = request.form.get('fat')
-    
+    # Tarih desteği
+    date_str = request.form.get('date')
+    if date_str:
+        try:
+            meal_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except Exception:
+            meal_date = date.today()
+    else:
+        meal_date = date.today()
     if not all([meal_type, food_name, calories]):
         flash('Lütfen gerekli alanları doldurun.', 'error')
-        return redirect(url_for('meals'))
-    
+        return redirect(url_for('meals', date=date_str or ''))
     try:
         # Besin veritabanında ara
         food = next((f for f in FOOD_DB if f['name'] == food_name), None)
-        
         meal = Meal(
             user_id=current_user.id,
             meal_type=meal_type,
@@ -384,7 +452,8 @@ def add_meal():
             calories=float(calories),
             protein=float(protein) if protein else None,
             carbs=float(carbs) if carbs else None,
-            fat=float(fat) if fat else None
+            fat=float(fat) if fat else None,
+            date=meal_date
         )
         db.session.add(meal)
         db.session.commit()
@@ -393,8 +462,7 @@ def add_meal():
         db.session.rollback()
         flash('Öğün eklenirken bir hata oluştu.', 'error')
         print(f"Hata detayı: {str(e)}")  # Hata detayını logla
-    
-    return redirect(url_for('meals'))
+    return redirect(url_for('meals', date=date_str or ''))
 
 @app.route('/delete-meal/<int:meal_id>', methods=['POST'])
 @login_required
@@ -596,7 +664,6 @@ def analyze_blood_test(results):
             if wbc < 4:
                 comments.append('Beyaz kan hücresi (WBC) düşük (Referans: 4-11 x10^9/L). Bağışıklık sisteminiz zayıf olabilir.')
                 general_recommendations.extend([
-                    'Bağışıklık sistemini güçlendiren besinler tüketin (C vitamini, çinko, probiyotikler)',
                     'Düzenli uyku uyuyun (7-8 saat)',
                     'Stresten uzak durun',
                     'Hijyen kurallarına dikkat edin'
@@ -827,9 +894,19 @@ def blood_test_detail(test_id):
     return render_template('main/blood_test_detail.html', test_result=test_result)
 
 @app.route('/kriz_analizleri', methods=['GET', 'POST'])
+@login_required
 def kriz_analizleri():
     prediction = None
     prediction_type = None
+    
+    # Get user's blood test results and ensure proper serialization
+    blood_tests = TestResult.query.filter_by(user_id=current_user.id).order_by(TestResult.date.desc()).all()
+    
+    # Debug için kan tahlili sonuçlarını kontrol et
+    for test in blood_tests:
+        if test.results_data:
+            print(f"Test ID: {test.id}, Date: {test.date}")
+            print(f"Results data: {test.results_data}")
     
     if request.method == 'POST':
         try:
@@ -878,7 +955,10 @@ def kriz_analizleri():
             flash(f'Bir hata oluştu: {str(e)}', 'error')
             return redirect(url_for('kriz_analizleri'))
 
-    return render_template('kriz_analizleri.html', prediction=prediction, prediction_type=prediction_type)
+    return render_template('kriz_analizleri.html', 
+                         prediction=prediction, 
+                         prediction_type=prediction_type,
+                         blood_tests=blood_tests)
 
 @app.route('/search-food', methods=['GET'])
 @login_required
@@ -925,6 +1005,393 @@ def calculate_nutrition():
     }
     
     return jsonify(nutrition)
+
+@app.route('/health-journal', methods=['GET', 'POST'])
+@login_required
+def health_journal():
+    if request.method == 'POST':
+        entry = HealthJournal(
+            user_id=current_user.id,
+            date=request.form.get('date'),
+            mood=request.form.get('mood'),
+            sleep_hours=request.form.get('sleep_hours'),
+            exercise=request.form.get('exercise'),
+            nutrition=request.form.get('nutrition'),
+            complaints=request.form.get('complaints')
+        )
+        db.session.add(entry)
+        db.session.commit()
+        flash('Günlük kaydınız eklendi.', 'success')
+        return redirect(url_for('health_journal'))
+    entries = HealthJournal.query.filter_by(user_id=current_user.id).order_by(HealthJournal.date.desc()).limit(30).all()
+    return render_template('health_journal.html', entries=entries)
+
+@app.route('/chronic-tracking', methods=['GET', 'POST'])
+@login_required
+def chronic_tracking():
+    if request.method == 'POST':
+        disease_type = request.form.get('disease_type')
+        measurement_type = request.form.get('measurement_type')
+        value = request.form.get('value')
+        note = request.form.get('note')
+        date_str = request.form.get('date')
+        try:
+            entry_date = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else date.today()
+        except Exception:
+            entry_date = date.today()
+        entry = ChronicMeasurement(
+            user_id=current_user.id,
+            date=entry_date,
+            disease_type=disease_type,
+            measurement_type=measurement_type,
+            value=value,
+            note=note
+        )
+        db.session.add(entry)
+        db.session.commit()
+        flash('Ölçüm kaydedildi.', 'success')
+        return redirect(url_for('chronic_tracking'))
+    # Son 30 ölçüm
+    measurements = ChronicMeasurement.query.filter_by(user_id=current_user.id).order_by(ChronicMeasurement.date.desc()).limit(30).all()
+    return render_template('chronic_tracking.html', measurements=measurements)
+
+@app.route('/chronic-tracking/data')
+@login_required
+def chronic_tracking_data():
+    # Tüm ölçümleri JSON olarak döndür (grafik için)
+    measurements = ChronicMeasurement.query.filter_by(user_id=current_user.id).order_by(ChronicMeasurement.date.asc()).all()
+    data = [
+        {
+            'date': m.date.strftime('%Y-%m-%d'),
+            'disease_type': m.disease_type,
+            'measurement_type': m.measurement_type,
+            'value': m.value
+        }
+        for m in measurements
+    ]
+    return jsonify(data)
+
+@app.route('/mood-stress-test', methods=['GET', 'POST'])
+@login_required
+def mood_stress_test():
+    questions = [
+        # Mood
+        {
+            'id': 'q1', 'category': 'mood', 'text': 'Bugün kendini nasıl hissediyorsun?',
+            'options': [
+                {'label': '😃 Çok iyi', 'value': 3},
+                {'label': '🙂 İyi', 'value': 2},
+                {'label': '😐 Nötr', 'value': 1},
+                {'label': '😔 Kötü', 'value': 0}
+            ]
+        },
+        {
+            'id': 'q2', 'category': 'mood', 'text': 'Son günlerde enerjin nasıldı?',
+            'options': [
+                {'label': '⚡ Yüksek', 'value': 3},
+                {'label': '😊 İyi', 'value': 2},
+                {'label': '😴 Düşük', 'value': 1},
+                {'label': '🥱 Çok düşük', 'value': 0}
+            ]
+        },
+        # Stres
+        {
+            'id': 'q3', 'category': 'stress', 'text': 'Son bir haftada ne kadar stresliydin?',
+            'options': [
+                {'label': '😌 Hiç', 'value': 0},
+                {'label': '🙂 Az', 'value': 1},
+                {'label': '😕 Orta', 'value': 2},
+                {'label': '😣 Çok', 'value': 3}
+            ]
+        },
+        {
+            'id': 'q4', 'category': 'stress', 'text': 'Son günlerde kendini ne kadar gergin hissettin?',
+            'options': [
+                {'label': '😌 Hiç', 'value': 0},
+                {'label': '🙂 Az', 'value': 1},
+                {'label': '😕 Orta', 'value': 2},
+                {'label': '😣 Çok', 'value': 3}
+            ]
+        },
+        # Uyku
+        {
+            'id': 'q5', 'category': 'sleep', 'text': 'Son bir haftada kaç gece 7 saatten az uyudun?',
+            'options': [
+                {'label': '0-1 gece', 'value': 3},
+                {'label': '2-3 gece', 'value': 2},
+                {'label': '4-5 gece', 'value': 1},
+                {'label': '6-7 gece', 'value': 0}
+            ]
+        },
+        # Anksiyete
+        {
+            'id': 'q6', 'category': 'anxiety', 'text': 'Son günlerde kaygı seviyen nasıldı?',
+            'options': [
+                {'label': '😌 Çok düşük', 'value': 3},
+                {'label': '🙂 Düşük', 'value': 2},
+                {'label': '😕 Orta', 'value': 1},
+                {'label': '😣 Yüksek', 'value': 0}
+            ]
+        },
+        # Sosyal Destek
+        {
+            'id': 'q7', 'category': 'social', 'text': 'Yakınlarınla ne sıklıkla iletişim kurdun?',
+            'options': [
+                {'label': 'Her gün', 'value': 3},
+                {'label': 'Sık', 'value': 2},
+                {'label': 'Nadiren', 'value': 1},
+                {'label': 'Hiç', 'value': 0}
+            ]
+        },
+        {
+            'id': 'q8', 'category': 'social', 'text': 'Kendini ne kadar yalnız hissettin?',
+            'options': [
+                {'label': 'Hiç', 'value': 3},
+                {'label': 'Az', 'value': 2},
+                {'label': 'Orta', 'value': 1},
+                {'label': 'Çok', 'value': 0}
+            ]
+        },
+        # Motivasyon
+        {
+            'id': 'q9', 'category': 'motivation', 'text': 'Gün içinde ne kadar motive hissediyorsun?',
+            'options': [
+                {'label': 'Çok', 'value': 3},
+                {'label': 'Orta', 'value': 2},
+                {'label': 'Az', 'value': 1},
+                {'label': 'Hiç', 'value': 0}
+            ]
+        },
+        # Öz Bakım
+        {
+            'id': 'q10', 'category': 'selfcare', 'text': 'Kendine vakit ayırabildin mi?',
+            'options': [
+                {'label': 'Evet', 'value': 3},
+                {'label': 'Kısmen', 'value': 2},
+                {'label': 'Nadiren', 'value': 1},
+                {'label': 'Hayır', 'value': 0}
+            ]
+        }
+    ]
+    if request.method == 'POST':
+        scores = {}
+        counts = {}
+        answers = {}
+        for q in questions:
+            val = request.form.get(q['id'])
+            if val is not None:
+                answers[q['id']] = int(val)
+                cat = q['category']
+                scores[cat] = scores.get(cat, 0) + int(val)
+                counts[cat] = counts.get(cat, 0) + 1
+        # Ortalama skorlar
+        avgs = {cat: round(scores[cat]/counts[cat], 2) if counts[cat] else 0 for cat in scores}
+        # Yorumlar ve emojiler
+        feedback = {}
+        for cat in avgs:
+            avg = avgs[cat]
+            if cat == 'mood':
+                if avg >= 2.5:
+                    text = 'Harika! Pozitif ve enerjik hissediyorsun.'; emoji = '😃'
+                elif avg >= 1.5:
+                    text = 'İyi gidiyorsun, enerjin fena değil.'; emoji = '🙂'
+                elif avg >= 1.0:
+                    text = 'Biraz düşük hissediyorsun, kendine vakit ayır.'; emoji = '😐'
+                else:
+                    text = 'Moralin düşük, biraz dinlenmeye ve kendini şımartmaya ne dersin?'; emoji = '😔'
+            elif cat == 'stress':
+                if avg <= 0.5:
+                    text = 'Stres seviyen çok düşük, harika!'; emoji = '😌'
+                elif avg <= 1.5:
+                    text = 'Stresin az, iyi gidiyorsun.'; emoji = '🙂'
+                elif avg <= 2.2:
+                    text = 'Orta düzeyde stresin var, biraz rahatlamaya çalış.'; emoji = '😕'
+                else:
+                    text = 'Stres seviyen yüksek, kendine iyi bak ve gerekirse destek al.'; emoji = '😣'
+            elif cat == 'sleep':
+                if avg >= 2.5:
+                    text = 'Uyku düzenin çok iyi!'; emoji = '😴'
+                elif avg >= 1.5:
+                    text = 'Uyku kaliten fena değil.'; emoji = '🙂'
+                else:
+                    text = 'Uyku kaliten düşük, akşam ekran süresini azaltmayı dene.'; emoji = '🌙'
+            elif cat == 'anxiety':
+                if avg >= 2.5:
+                    text = 'Kaygı seviyen çok düşük, harika!'; emoji = '😌'
+                elif avg >= 1.5:
+                    text = 'Kaygı seviyen düşük.'; emoji = '🙂'
+                else:
+                    text = 'Kaygı seviyen yüksek, rahatlatıcı aktiviteler dene.'; emoji = '😟'
+            elif cat == 'social':
+                if avg >= 2.5:
+                    text = 'Sosyal desteğin çok iyi!'; emoji = '👫'
+                elif avg >= 1.5:
+                    text = 'Sosyal desteğin fena değil.'; emoji = '🙂'
+                else:
+                    text = 'Daha fazla iletişim kurmaya çalış.'; emoji = '📞'
+            elif cat == 'motivation':
+                if avg >= 2.5:
+                    text = 'Motivasyonun yüksek!'; emoji = '💪'
+                elif avg >= 1.5:
+                    text = 'Motivasyonun fena değil.'; emoji = '🙂'
+                else:
+                    text = 'Motivasyonun düşük, küçük hedefler koymayı dene.'; emoji = '🪫'
+            elif cat == 'selfcare':
+                if avg >= 2.5:
+                    text = 'Kendine çok iyi bakıyorsun!'; emoji = '🧖'
+                elif avg >= 1.5:
+                    text = 'Kendine fena bakmıyorsun.'; emoji = '🙂'
+                else:
+                    text = 'Kendine daha fazla vakit ayırmalısın.'; emoji = '🛀'
+            feedback[cat] = {'avg': avg, 'text': text, 'emoji': emoji}
+        # Genel analiz ve öneri
+        low_cats = [cat for cat, v in feedback.items() if v['avg'] < 1.2]
+        high_cats = [cat for cat, v in feedback.items() if v['avg'] > 2.2]
+        general_analysis = ""
+        if len(low_cats) >= 3:
+            general_analysis = "Genel olarak düşük bir dönemden geçiyorsun. Kendine şefkat göster, gerekirse bir uzmandan destek almaktan çekinme."
+        elif 'stress' in feedback and feedback['stress']['avg'] > 2 and 'motivation' in feedback and feedback['motivation']['avg'] < 1.2:
+            general_analysis = "Stresin yüksek, motivasyonun düşük. Nefes egzersizleri ve küçük hedefler koymak iyi gelebilir."
+        elif len(high_cats) >= 4:
+            general_analysis = "Harika gidiyorsun! Sağlıklı alışkanlıklarını sürdürmeye devam et."
+        else:
+            # Kategoriye özel öneriler
+            suggestions = []
+            if 'sleep' in feedback and feedback['sleep']['avg'] < 1.5:
+                suggestions.append("Uyku kaliten düşük, akşam ekran süresini azaltmayı dene.")
+            if 'social' in feedback and feedback['social']['avg'] < 1.5:
+                suggestions.append("Daha fazla iletişim kurmaya çalış, sevdiklerinle vakit geçir.")
+            if 'selfcare' in feedback and feedback['selfcare']['avg'] < 1.5:
+                suggestions.append("Kendine daha fazla vakit ayırmalısın.")
+            if 'anxiety' in feedback and feedback['anxiety']['avg'] < 1.5:
+                suggestions.append("Kaygı seviyen yüksek, rahatlatıcı aktiviteler dene.")
+            if suggestions:
+                general_analysis = "\n".join(suggestions)
+            else:
+                general_analysis = "Genel olarak iyi gidiyorsun! Küçük iyileştirmelerle daha da iyi hissedebilirsin."
+        # Kaydet
+        test = MoodStressTest(
+            user_id=current_user.id,
+            mood_score=scores.get('mood', 0),
+            stress_score=scores.get('stress', 0),
+            result_json=feedback
+        )
+        db.session.add(test)
+        db.session.commit()
+        return render_template('mood_stress_test.html', questions=questions, result=feedback, answers=answers, general_analysis=general_analysis)
+    return render_template('mood_stress_test.html', questions=questions)
+
+@app.route('/health-trends')
+@login_required
+def health_trends():
+    # Duygu & stres testleri
+    mood_tests = MoodStressTest.query.filter_by(user_id=current_user.id).order_by(MoodStressTest.date.asc()).all()
+    mood_data = [{'date': t.date.strftime('%Y-%m-%d'), 'mood': t.result_json.get('mood', {}).get('avg', None), 'stress': t.result_json.get('stress', {}).get('avg', None)} for t in mood_tests]
+    # Kronik hastalık ölçümleri (ör: kan şekeri, tansiyon)
+    chronic_measurements = ChronicMeasurement.query.filter_by(user_id=current_user.id).order_by(ChronicMeasurement.date.asc()).all()
+    chronic_data = [{'date': m.date.strftime('%Y-%m-%d'), 'type': m.measurement_type, 'value': m.value} for m in chronic_measurements]
+    # Son 30 gün için stres değişimi
+    import datetime
+    today = datetime.date.today()
+    last_30 = [t for t in mood_tests if t.date.date() >= today - datetime.timedelta(days=30)]
+    if len(last_30) >= 2:
+        first = last_30[0].result_json.get('stress', {}).get('avg', None)
+        last = last_30[-1].result_json.get('stress', {}).get('avg', None)
+        if first is not None and last is not None and first > 0:
+            change = round(100 * (last - first) / first, 1)
+            if change < 0:
+                motivation = f"Son 1 ayda stres seviyen %{abs(change)} azaldı! Harika gidiyorsun."
+            elif change > 0:
+                motivation = f"Son 1 ayda stres seviyen %{change} arttı. Dilersen stres yönetimi için önerilerimize göz atabilirsin."
+            else:
+                motivation = "Son 1 ayda stres seviyende önemli bir değişiklik olmadı."
+        else:
+            motivation = "Yeterli veri yok."
+    else:
+        motivation = "Son 1 ayda yeterli stres testi verisi yok."
+    return render_template('health_trends.html', mood_data=mood_data, chronic_data=chronic_data, motivation=motivation)
+
+@app.route('/health-goals', methods=['GET', 'POST'])
+@login_required
+def health_goals():
+    # Kullanıcının hedefleri
+    goal = HealthGoal.query.filter_by(user_id=current_user.id).first()
+    if not goal:
+        goal = HealthGoal(user_id=current_user.id)
+        db.session.add(goal)
+        db.session.commit()
+    message = None
+    if request.method == 'POST':
+        if 'update_goal' in request.form:
+            goal.steps = int(request.form.get('steps', 8000))
+            goal.water = float(request.form.get('water', 2.0))
+            goal.sleep = float(request.form.get('sleep', 7.0))
+            goal.weight = float(request.form.get('weight') or 0) or None
+            goal.calories = int(request.form.get('calories') or 0) or None
+            db.session.commit()
+            message = 'Hedefleriniz güncellendi.'
+        elif 'add_entry' in request.form:
+            entry = HealthGoalEntry(
+                user_id=current_user.id,
+                date=request.form.get('date') or date.today(),
+                steps=int(request.form.get('entry_steps', 0)),
+                water=float(request.form.get('entry_water', 0)),
+                sleep=float(request.form.get('entry_sleep', 0)),
+                weight=float(request.form.get('entry_weight', 0)),
+                calories=int(request.form.get('entry_calories', 0))
+            )
+            db.session.add(entry)
+            db.session.commit()
+            message = 'Günlük giriş kaydedildi.'
+    # Son giriş (bugün)
+    today_entry = HealthGoalEntry.query.filter_by(user_id=current_user.id, date=date.today()).first()
+    # Son 7 gün girişleri
+    last_entries = HealthGoalEntry.query.filter_by(user_id=current_user.id).order_by(HealthGoalEntry.date.desc()).limit(7).all()
+    # Rozet/tebrik: bugünkü giriş hedefleri karşıladıysa
+    congrats = False
+    if today_entry:
+        congrats = (
+            (goal.steps and today_entry.steps and today_entry.steps >= goal.steps) and
+            (goal.water and today_entry.water and today_entry.water >= goal.water) and
+            (goal.sleep and today_entry.sleep and today_entry.sleep >= goal.sleep)
+        )
+    return render_template('health_goals.html', goal=goal, today_entry=today_entry, last_entries=last_entries, congrats=congrats, message=message)
+
+@app.route('/health-library')
+def health_library():
+    contents = [
+        {
+            'title': 'Tansiyon Nasıl Ölçülür?',
+            'desc': 'Evde doğru tansiyon ölçümü için pratik bilgiler.',
+            'youtube': 'ojzq8IWj1qU',
+            'category': 'Tansiyon'
+        },
+        {
+            'title': 'Stresle Başa Çıkma Yolları',
+            'desc': 'Stres yönetimi için etkili teknikler ve öneriler.',
+            'youtube': 'NIz7-849Vfc',
+            'category': 'Stres Yönetimi'
+        },
+        {
+            'title': 'Sağlıklı Beslenme Temelleri',
+            'desc': 'Dengeli ve sağlıklı beslenmenin püf noktaları.',
+            'youtube': '8bWwcWBd96E',
+            'category': 'Beslenme'
+        },
+        {
+            'title': 'Diyabet Nedir?',
+            'desc': 'Diyabet hakkında temel bilgiler ve önlemler.',
+            'youtube': 'e7nhZFvV_jg',
+            'category': 'Diyabet'
+        },
+        {
+            'title': 'Evde Egzersiz Önerileri',
+            'desc': 'Evde kolayca yapabileceğiniz egzersizler.',
+            'youtube': 'CJpDQHj_KNU',
+            'category': 'Egzersiz'
+        }
+    ]
+    return render_template('health_library.html', contents=contents)
 
 if __name__ == '__main__':
     app.run(debug=True) 

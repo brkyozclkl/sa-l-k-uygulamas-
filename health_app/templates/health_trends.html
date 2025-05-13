@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Sağlık Trendleri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Sağlık Trendleri</h1>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-success fs-5 text-center">
+                <i class="fas fa-chart-line me-2"></i>{{ motivation }}
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Duygu & Stres Zaman Serisi</h5>
+                    <canvas id="moodStressChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Kronik Ölçümler Zaman Serisi</h5>
+                    <canvas id="chronicChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Mood & Stress Chart
+const moodData = {{ mood_data|tojson }};
+const moodLabels = moodData.map(d => d.date);
+const moodScores = moodData.map(d => d.mood);
+const stressScores = moodData.map(d => d.stress);
+const ctx1 = document.getElementById('moodStressChart').getContext('2d');
+new Chart(ctx1, {
+    type: 'line',
+    data: {
+        labels: moodLabels,
+        datasets: [
+            {
+                label: 'Duygu Durumu',
+                data: moodScores,
+                borderColor: '#4ECDC4',
+                backgroundColor: 'rgba(78,205,196,0.1)',
+                tension: 0.2,
+                fill: true
+            },
+            {
+                label: 'Stres',
+                data: stressScores,
+                borderColor: '#FF6B6B',
+                backgroundColor: 'rgba(255,107,107,0.1)',
+                tension: 0.2,
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: { y: { beginAtZero: true, max: 3 } }
+    }
+});
+// Chronic Chart
+const chronicData = {{ chronic_data|tojson }};
+const chronicTypes = [...new Set(chronicData.map(d => d.type))];
+const chronicLabels = [...new Set(chronicData.map(d => d.date))];
+const datasets = chronicTypes.map((type, idx) => {
+    return {
+        label: type.replace('_', ' ').toUpperCase(),
+        data: chronicLabels.map(date => {
+            const found = chronicData.find(d => d.date === date && d.type === type);
+            // Try to parse as float, else show as null
+            if (found) {
+                const val = parseFloat(found.value.replace(',', '.'));
+                return isNaN(val) ? null : val;
+            }
+            return null;
+        }),
+        borderColor: idx === 0 ? '#007bff' : '#ffb347',
+        backgroundColor: idx === 0 ? 'rgba(0,123,255,0.1)' : 'rgba(255,179,71,0.1)',
+        tension: 0.2,
+        fill: true
+    };
+});
+const ctx2 = document.getElementById('chronicChart').getContext('2d');
+new Chart(ctx2, {
+    type: 'line',
+    data: {
+        labels: chronicLabels,
+        datasets: datasets
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: { y: { beginAtZero: false } }
+    }
+});
+</script>
+{% endblock %} 

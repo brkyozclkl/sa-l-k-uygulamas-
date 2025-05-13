@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Duygu & Stres Testi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Duygu Durumu & Stres Testi</h1>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {% if result %}
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-10">
+                    <div class="alert alert-warning text-center fs-5">
+                        <b>Genel Analiz:</b><br>{{ general_analysis.replace('\n', '<br>')|safe }}
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4">
+                {% for cat, res in result.items() %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-3 text-center border-0" style="background:rgba(255,255,255,0.95);">
+                        <div class="card-body">
+                            <div style="font-size:2.5rem;">{{ res.emoji }}</div>
+                            <h5 class="mt-2 mb-1 text-capitalize">{{ cat|replace('selfcare','öz bakım')|replace('motivation','motivasyon')|replace('social','sosyal destek')|replace('anxiety','anksiyete')|replace('sleep','uyku')|replace('mood','duygu durumu')|replace('stress','stres') }}</h5>
+                            <div class="mb-2">Skor: <b>{{ res.avg }}</b> / 3</div>
+                            <div class="text-muted small">{{ res.text }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="alert alert-info mt-4 text-center">
+                Kendine iyi bak! Testi istediğin zaman tekrar çözebilirsin.
+            </div>
+            <div class="text-center">
+                <a href="{{ url_for('mood_stress_test') }}" class="btn btn-outline-primary mt-2">Tekrar Test Çöz</a>
+            </div>
+            {% else %}
+            <form method="POST" class="card shadow-sm p-4 animate__animated animate__fadeIn">
+                {% for q in questions %}
+                <div class="mb-4">
+                    <label class="form-label fs-5 mb-2">{{ q.text }}</label>
+                    <div class="d-flex gap-3 flex-wrap">
+                        {% for opt in q.options %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="{{ q.id }}" id="{{ q.id }}_{{ loop.index }}" value="{{ opt.value }}" required>
+                            <label class="form-check-label fs-4" for="{{ q.id }}_{{ loop.index }}">{{ opt.label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary w-100">Sonucu Göster</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

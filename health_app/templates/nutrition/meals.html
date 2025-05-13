@@ -8,12 +8,19 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Günlük Öğün Takibi</h2>
-    
+    <!-- Tarih Seçici -->
+    <form method="get" class="mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="date" class="form-control" name="date" value="{{ selected_date }}">
+            <button class="btn btn-primary" type="submit">Tarihi Göster</button>
+        </div>
+    </form>
     <!-- Besin Arama ve Ekleme Formu -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Yeni Öğün Ekle</h5>
             <form id="addMealForm" method="POST" action="{{ url_for('add_meal') }}">
+                <input type="hidden" name="date" value="{{ selected_date }}">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -116,7 +123,7 @@
     <!-- Öğün Listesi -->
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Bugünkü Öğünler</h5>
+            <h5 class="card-title">Seçili Gündeki Öğünler</h5>
             {% if meals %}
             <div class="table-responsive">
                 <table class="table">

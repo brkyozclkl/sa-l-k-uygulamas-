@@ -192,6 +192,12 @@
             </div>
         </div>
 
+        <div class="mb-4">
+            <label for="autoFillText" class="form-label">Tahlil Metni (Yapıştır ve Otomatik Doldur)</label>
+            <textarea class="form-control" id="autoFillText" rows="5" placeholder="Tahlil sonuçlarınızı buraya yapıştırın..."></textarea>
+            <button type="button" class="btn btn-secondary mt-2" onclick="autoFillBloodTest()">Otomatik Doldur</button>
+        </div>
+
         <div class="mb-3">
             <label for="notes" class="form-label">Notlar</label>
             <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
@@ -219,4 +225,50 @@
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 </style>
+
+<script>
+function autoFillBloodTest() {
+    const text = document.getElementById('autoFillText').value;
+    if (!text) {
+        alert('Lütfen tahlil metnini yapıştırın.');
+        return;
+    }
+    // Anahtar parametreler ve input id eşlemesi
+    const patterns = [
+        {key: 'hgb', regex: /HGB\s*([\d.,]+)/i, id: 'hgb'},
+        {key: 'hct', regex: /HCT\s*([\d.,]+)/i, id: 'hct'},
+        {key: 'wbc', regex: /WBC\s*([\d.,]+)/i, id: 'wbc'},
+        {key: 'plt', regex: /PLT\s*([\d.,]+)/i, id: 'plt'},
+        {key: 'mcv', regex: /MCV\s*([\d.,]+)/i, id: 'mcv'},
+        {key: 'glucose', regex: /Glukoz.*?([\d.,]+)\s*mg\/dl/i, id: 'glucose'},
+        {key: 'urea', regex: /Üre.*?([\d.,]+)\s*mg\/dl/i, id: 'urea'},
+        {key: 'creatinine', regex: /Kreatinin\s*([\d.,]+)/i, id: 'creatinine'},
+        {key: 'alt', regex: /ALT\s*([\d.,]+)/i, id: 'alt'},
+        {key: 'ast', regex: /AST\s*([\d.,]+)/i, id: 'ast'},
+        {key: 'cholesterol', regex: /Kolesterol\s*([\d.,]+)/i, id: 'cholesterol'},
+        {key: 'hdl', regex: /HDL\s*kolesterol\s*([\d.,]+)/i, id: 'hdl'},
+        {key: 'ldl', regex: /LDL\s*Kolesterol.*?([\d.,]+)\s*mg\/dl/i, id: 'ldl'},
+        {key: 'triglycerides', regex: /Trigliserid\s*([\d.,]+)/i, id: 'triglycerides'},
+        {key: 'vitamin_d', regex: /Vitamin\s*D\s*([\d.,]+)/i, id: 'vitamin_d'},
+        {key: 'vitamin_b12', regex: /Vitamin\s*B12\s*([\d.,]+)/i, id: 'vitamin_b12'},
+        {key: 'iron', regex: /Demir.*?([\d.,]+)\s*μg\/dL/i, id: 'iron'},
+        {key: 'ferritin', regex: /Ferritin\s*([\d.,]+)/i, id: 'ferritin'},
+        {key: 'folic_acid', regex: /Folat\s*([\d.,]+)/i, id: 'folic_acid'},
+        {key: 'tsh', regex: /TSH\s*([\d.,]+)/i, id: 'tsh'},
+    ];
+    let found = false;
+    patterns.forEach(item => {
+        const match = text.match(item.regex);
+        if (match && document.getElementById(item.id)) {
+            document.getElementById(item.id).value = match[1].replace(',', '.');
+            found = true;
+        }
+    });
+    if (found) {
+        alert('Tahlil değerleri otomatik dolduruldu. Lütfen kontrol edin.');
+    } else {
+        alert('Hiçbir değer bulunamadı. Lütfen metni ve formatı kontrol edin.');
+    }
+}
+</script>
 {% endblock %} 
