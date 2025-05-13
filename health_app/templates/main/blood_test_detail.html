@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Tahlil Detayı - Sağlık Takip{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Tahlil Detayı ({{ test_result.date.strftime('%d.%m.%Y') }})</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="mb-3">Hemogram</h5>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">Hemoglobin (HGB): <strong>{{ test_result.results_data.hemogram.hgb or '-' }}</strong></li>
+                        <li class="list-group-item">Hematokrit (HCT): <strong>{{ test_result.results_data.hemogram.hct or '-' }}</strong></li>
+                        <li class="list-group-item">Beyaz Kan Hücresi (WBC): <strong>{{ test_result.results_data.hemogram.wbc or '-' }}</strong></li>
+                        <li class="list-group-item">Kırmızı Kan Hücresi (RBC): <strong>{{ test_result.results_data.hemogram.rbc or '-' }}</strong></li>
+                        <li class="list-group-item">Trombosit (PLT): <strong>{{ test_result.results_data.hemogram.plt or '-' }}</strong></li>
+                        <li class="list-group-item">MCV: <strong>{{ test_result.results_data.hemogram.mcv or '-' }}</strong></li>
+                    </ul>
+                    <h5 class="mb-3">Biyokimya</h5>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">Glukoz: <strong>{{ test_result.results_data.biyokimya.glucose or '-' }}</strong></li>
+                        <li class="list-group-item">Üre: <strong>{{ test_result.results_data.biyokimya.urea or '-' }}</strong></li>
+                        <li class="list-group-item">Kreatinin: <strong>{{ test_result.results_data.biyokimya.creatinine or '-' }}</strong></li>
+                        <li class="list-group-item">ALT: <strong>{{ test_result.results_data.biyokimya.alt or '-' }}</strong></li>
+                        <li class="list-group-item">AST: <strong>{{ test_result.results_data.biyokimya.ast or '-' }}</strong></li>
+                        <li class="list-group-item">Kolesterol: <strong>{{ test_result.results_data.biyokimya.cholesterol or '-' }}</strong></li>
+                        <li class="list-group-item">HDL: <strong>{{ test_result.results_data.biyokimya.hdl or '-' }}</strong></li>
+                        <li class="list-group-item">LDL: <strong>{{ test_result.results_data.biyokimya.ldl or '-' }}</strong></li>
+                        <li class="list-group-item">Trigliserit: <strong>{{ test_result.results_data.biyokimya.triglycerides or '-' }}</strong></li>
+                    </ul>
+                    <h5 class="mb-3">Vitamin ve Mineraller</h5>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">D Vitamini: <strong>{{ test_result.results_data.vitamin_mineral.vitamin_d or '-' }}</strong></li>
+                        <li class="list-group-item">B12 Vitamini: <strong>{{ test_result.results_data.vitamin_mineral.vitamin_b12 or '-' }}</strong></li>
+                        <li class="list-group-item">Demir: <strong>{{ test_result.results_data.vitamin_mineral.iron or '-' }}</strong></li>
+                        <li class="list-group-item">Ferritin: <strong>{{ test_result.results_data.vitamin_mineral.ferritin or '-' }}</strong></li>
+                        <li class="list-group-item">Folik Asit: <strong>{{ test_result.results_data.vitamin_mineral.folic_acid or '-' }}</strong></li>
+                    </ul>
+                    <h5 class="mb-3">Notlar</h5>
+                    {% if test_result.recommendations %}
+                        <div class="alert alert-info" style="white-space: pre-line;">
+                            {{ test_result.recommendations }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">Otomatik analiz yapılamadı veya not eklenmemiş.</div>
+                    {% endif %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Geri Dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

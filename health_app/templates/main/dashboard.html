@@ -43,7 +43,7 @@
                                         Henüz analiz edilmedi
                                     {% endif %}
                                 </p>
-                                <a href="#" class="btn btn-primary btn-sm">Detayları Gör</a>
+                                <a href="{{ url_for('blood_test_detail', test_id=result.id) }}" class="btn btn-primary btn-sm">Detayları Gör</a>
                             </div>
                         </div>
                     {% endfor %}
