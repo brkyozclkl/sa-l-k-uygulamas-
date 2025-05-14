@@ -550,15 +550,18 @@ def doctor_recommendation():
     doctor_recommendation = None
     
     if request.method == 'POST':
-        complaint = request.form.get('complaint', '').lower()
+        complaint = request.form.get('complaint', '').strip()
         for pattern, doc in keyword_doctor_map:
-            if re.search(pattern, complaint):
+            if re.search(pattern, complaint, re.IGNORECASE):
                 matched_doctors = [doc]
                 home_remedies = doc.get('home_remedies', [])
                 doctor_recommendation = doc.get('recommendation', '')
                 break
     if not matched_doctors and request.method == 'POST':
         matched_doctors = all_doctors
+        home_remedies = []
+        doctor_recommendation = None
+        flash('Şikayetinizle tam eşleşen bir uzman bulunamadı. Tüm doktorlar listeleniyor.', 'warning')
         
     return render_template('doctor_recommendation.html', 
                          complaint=complaint, 
@@ -1036,105 +1039,17 @@ def chronic_tracking_data():
 @app.route('/mood-stress-test', methods=['GET', 'POST'])
 @login_required
 def mood_stress_test():
-    questions = [
-        # Mood
-        {
-            'id': 'q1', 'category': 'mood', 'text': 'Bugün kendini nasıl hissediyorsun?',
-            'options': [
-                {'label': '😃 Çok iyi', 'value': 3},
-                {'label': '🙂 İyi', 'value': 2},
-                {'label': '😐 Nötr', 'value': 1},
-                {'label': '😔 Kötü', 'value': 0}
-            ]
-        },
-        {
-            'id': 'q2', 'category': 'mood', 'text': 'Son günlerde enerjin nasıldı?',
-            'options': [
-                {'label': '⚡ Yüksek', 'value': 3},
-                {'label': '😊 İyi', 'value': 2},
-                {'label': '😴 Düşük', 'value': 1},
-                {'label': '🥱 Çok düşük', 'value': 0}
-            ]
-        },
-        # Stres
-        {
-            'id': 'q3', 'category': 'stress', 'text': 'Son bir haftada ne kadar stresliydin?',
-            'options': [
-                {'label': '😌 Hiç', 'value': 0},
-                {'label': '🙂 Az', 'value': 1},
-                {'label': '😕 Orta', 'value': 2},
-                {'label': '😣 Çok', 'value': 3}
-            ]
-        },
-        {
-            'id': 'q4', 'category': 'stress', 'text': 'Son günlerde kendini ne kadar gergin hissettin?',
-            'options': [
-                {'label': '😌 Hiç', 'value': 0},
-                {'label': '🙂 Az', 'value': 1},
-                {'label': '😕 Orta', 'value': 2},
-                {'label': '😣 Çok', 'value': 3}
-            ]
-        },
-        # Uyku
-        {
-            'id': 'q5', 'category': 'sleep', 'text': 'Son bir haftada kaç gece 7 saatten az uyudun?',
-            'options': [
-                {'label': '0-1 gece', 'value': 3},
-                {'label': '2-3 gece', 'value': 2},
-                {'label': '4-5 gece', 'value': 1},
-                {'label': '6-7 gece', 'value': 0}
-            ]
-        },
-        # Anksiyete
-        {
-            'id': 'q6', 'category': 'anxiety', 'text': 'Son günlerde kaygı seviyen nasıldı?',
-            'options': [
-                {'label': '😌 Çok düşük', 'value': 3},
-                {'label': '🙂 Düşük', 'value': 2},
-                {'label': '😕 Orta', 'value': 1},
-                {'label': '😣 Yüksek', 'value': 0}
-            ]
-        },
-        # Sosyal Destek
-        {
-            'id': 'q7', 'category': 'social', 'text': 'Yakınlarınla ne sıklıkla iletişim kurdun?',
-            'options': [
-                {'label': 'Her gün', 'value': 3},
-                {'label': 'Sık', 'value': 2},
-                {'label': 'Nadiren', 'value': 1},
-                {'label': 'Hiç', 'value': 0}
-            ]
-        },
-        {
-            'id': 'q8', 'category': 'social', 'text': 'Kendini ne kadar yalnız hissettin?',
-            'options': [
-                {'label': 'Hiç', 'value': 3},
-                {'label': 'Az', 'value': 2},
-                {'label': 'Orta', 'value': 1},
-                {'label': 'Çok', 'value': 0}
-            ]
-        },
-        # Motivasyon
-        {
-            'id': 'q9', 'category': 'motivation', 'text': 'Gün içinde ne kadar motive hissediyorsun?',
-            'options': [
-                {'label': 'Çok', 'value': 3},
-                {'label': 'Orta', 'value': 2},
-                {'label': 'Az', 'value': 1},
-                {'label': 'Hiç', 'value': 0}
-            ]
-        },
-        # Öz Bakım
-        {
-            'id': 'q10', 'category': 'selfcare', 'text': 'Kendine vakit ayırabildin mi?',
-            'options': [
-                {'label': 'Evet', 'value': 3},
-                {'label': 'Kısmen', 'value': 2},
-                {'label': 'Nadiren', 'value': 1},
-                {'label': 'Hayır', 'value': 0}
-            ]
-        }
-    ]
+    # Load test data from JSON file
+    try:
+        with open('mood_test_data.json', 'r', encoding='utf-8') as f:
+            test_data = json.load(f)
+            questions = test_data['questions']
+            feedback_data = test_data['feedback']
+            general_analysis_data = test_data['general_analysis']
+    except FileNotFoundError:
+        flash('Test verileri yüklenemedi.', 'error')
+        return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
         scores = {}
         counts = {}
@@ -1146,91 +1061,60 @@ def mood_stress_test():
                 cat = q['category']
                 scores[cat] = scores.get(cat, 0) + int(val)
                 counts[cat] = counts.get(cat, 0) + 1
+
         # Ortalama skorlar
         avgs = {cat: round(scores[cat]/counts[cat], 2) if counts[cat] else 0 for cat in scores}
+        
         # Yorumlar ve emojiler
         feedback = {}
         for cat in avgs:
             avg = avgs[cat]
-            if cat == 'mood':
-                if avg >= 2.5:
-                    text = 'Harika! Pozitif ve enerjik hissediyorsun.'; emoji = '😃'
-                elif avg >= 1.5:
-                    text = 'İyi gidiyorsun, enerjin fena değil.'; emoji = '🙂'
-                elif avg >= 1.0:
-                    text = 'Biraz düşük hissediyorsun, kendine vakit ayır.'; emoji = '😐'
-                else:
-                    text = 'Moralin düşük, biraz dinlenmeye ve kendini şımartmaya ne dersin?'; emoji = '😔'
-            elif cat == 'stress':
-                if avg <= 0.5:
-                    text = 'Stres seviyen çok düşük, harika!'; emoji = '😌'
-                elif avg <= 1.5:
-                    text = 'Stresin az, iyi gidiyorsun.'; emoji = '🙂'
-                elif avg <= 2.2:
-                    text = 'Orta düzeyde stresin var, biraz rahatlamaya çalış.'; emoji = '😕'
-                else:
-                    text = 'Stres seviyen yüksek, kendine iyi bak ve gerekirse destek al.'; emoji = '😣'
-            elif cat == 'sleep':
-                if avg >= 2.5:
-                    text = 'Uyku düzenin çok iyi!'; emoji = '😴'
-                elif avg >= 1.5:
-                    text = 'Uyku kaliten fena değil.'; emoji = '🙂'
-                else:
-                    text = 'Uyku kaliten düşük, akşam ekran süresini azaltmayı dene.'; emoji = '🌙'
-            elif cat == 'anxiety':
-                if avg >= 2.5:
-                    text = 'Kaygı seviyen çok düşük, harika!'; emoji = '😌'
-                elif avg >= 1.5:
-                    text = 'Kaygı seviyen düşük.'; emoji = '🙂'
-                else:
-                    text = 'Kaygı seviyen yüksek, rahatlatıcı aktiviteler dene.'; emoji = '😟'
-            elif cat == 'social':
-                if avg >= 2.5:
-                    text = 'Sosyal desteğin çok iyi!'; emoji = '👫'
-                elif avg >= 1.5:
-                    text = 'Sosyal desteğin fena değil.'; emoji = '🙂'
-                else:
-                    text = 'Daha fazla iletişim kurmaya çalış.'; emoji = '📞'
-            elif cat == 'motivation':
-                if avg >= 2.5:
-                    text = 'Motivasyonun yüksek!'; emoji = '💪'
-                elif avg >= 1.5:
-                    text = 'Motivasyonun fena değil.'; emoji = '🙂'
-                else:
-                    text = 'Motivasyonun düşük, küçük hedefler koymayı dene.'; emoji = '🪫'
-            elif cat == 'selfcare':
-                if avg >= 2.5:
-                    text = 'Kendine çok iyi bakıyorsun!'; emoji = '🧖'
-                elif avg >= 1.5:
-                    text = 'Kendine fena bakmıyorsun.'; emoji = '🙂'
-                else:
-                    text = 'Kendine daha fazla vakit ayırmalısın.'; emoji = '🛀'
-            feedback[cat] = {'avg': avg, 'text': text, 'emoji': emoji}
-        # Genel analiz ve öneri
+            cat_feedback = feedback_data[cat]
+            
+            # Find appropriate feedback level based on thresholds
+            feedback_level = None
+            for level, data in cat_feedback.items():
+                if 'threshold' in data and avg >= data['threshold']:
+                    feedback_level = level
+                    break
+            
+            # If no threshold matched, use the lowest level
+            if feedback_level is None:
+                feedback_level = list(cat_feedback.keys())[-1]
+            
+            feedback[cat] = {
+                'avg': avg,
+                'text': cat_feedback[feedback_level]['text'],
+                'emoji': cat_feedback[feedback_level]['emoji']
+            }
+
+        # Genel analiz
         low_cats = [cat for cat, v in feedback.items() if v['avg'] < 1.2]
         high_cats = [cat for cat, v in feedback.items() if v['avg'] > 2.2]
+        
         general_analysis = ""
-        if len(low_cats) >= 3:
-            general_analysis = "Genel olarak düşük bir dönemden geçiyorsun. Kendine şefkat göster, gerekirse bir uzmandan destek almaktan çekinme."
-        elif 'stress' in feedback and feedback['stress']['avg'] > 2 and 'motivation' in feedback and feedback['motivation']['avg'] < 1.2:
-            general_analysis = "Stresin yüksek, motivasyonun düşük. Nefes egzersizleri ve küçük hedefler koymak iyi gelebilir."
-        elif len(high_cats) >= 4:
-            general_analysis = "Harika gidiyorsun! Sağlıklı alışkanlıklarını sürdürmeye devam et."
+        if len(low_cats) >= general_analysis_data['multiple_low']['threshold']:
+            general_analysis = general_analysis_data['multiple_low']['text']
+        elif ('stress' in feedback and 
+              feedback['stress']['avg'] > general_analysis_data['stress_motivation']['stress_threshold'] and 
+              'motivation' in feedback and 
+              feedback['motivation']['avg'] < general_analysis_data['stress_motivation']['motivation_threshold']):
+            general_analysis = general_analysis_data['stress_motivation']['text']
+        elif len(high_cats) >= general_analysis_data['multiple_high']['threshold']:
+            general_analysis = general_analysis_data['multiple_high']['text']
         else:
             # Kategoriye özel öneriler
             suggestions = []
-            if 'sleep' in feedback and feedback['sleep']['avg'] < 1.5:
-                suggestions.append("Uyku kaliten düşük, akşam ekran süresini azaltmayı dene.")
-            if 'social' in feedback and feedback['social']['avg'] < 1.5:
-                suggestions.append("Daha fazla iletişim kurmaya çalış, sevdiklerinle vakit geçir.")
-            if 'selfcare' in feedback and feedback['selfcare']['avg'] < 1.5:
-                suggestions.append("Kendine daha fazla vakit ayırmalısın.")
-            if 'anxiety' in feedback and feedback['anxiety']['avg'] < 1.5:
-                suggestions.append("Kaygı seviyen yüksek, rahatlatıcı aktiviteler dene.")
+            for cat in feedback:
+                if feedback[cat]['avg'] < 1.5:
+                    if cat in feedback_data and 'low' in feedback_data[cat]:
+                        suggestions.append(feedback_data[cat]['low']['text'])
+            
             if suggestions:
                 general_analysis = "\n".join(suggestions)
             else:
-                general_analysis = "Genel olarak iyi gidiyorsun! Küçük iyileştirmelerle daha da iyi hissedebilirsin."
+                general_analysis = general_analysis_data['default']
+
         # Kaydet
         test = MoodStressTest(
             user_id=current_user.id,
@@ -1240,7 +1124,13 @@ def mood_stress_test():
         )
         db.session.add(test)
         db.session.commit()
-        return render_template('mood_stress_test.html', questions=questions, result=feedback, answers=answers, general_analysis=general_analysis)
+        
+        return render_template('mood_stress_test.html', 
+                             questions=questions, 
+                             result=feedback, 
+                             answers=answers, 
+                             general_analysis=general_analysis)
+    
     return render_template('mood_stress_test.html', questions=questions)
 
 @app.route('/health-trends')
@@ -1321,38 +1211,13 @@ def health_goals():
 
 @app.route('/health-library')
 def health_library():
-    contents = [
-        {
-            'title': 'Tansiyon Nasıl Ölçülür?',
-            'desc': 'Evde doğru tansiyon ölçümü için pratik bilgiler.',
-            'youtube': 'ojzq8IWj1qU',
-            'category': 'Tansiyon'
-        },
-        {
-            'title': 'Stresle Başa Çıkma Yolları',
-            'desc': 'Stres yönetimi için etkili teknikler ve öneriler.',
-            'youtube': 'NIz7-849Vfc',
-            'category': 'Stres Yönetimi'
-        },
-        {
-            'title': 'Sağlıklı Beslenme Temelleri',
-            'desc': 'Dengeli ve sağlıklı beslenmenin püf noktaları.',
-            'youtube': '8bWwcWBd96E',
-            'category': 'Beslenme'
-        },
-        {
-            'title': 'Diyabet Nedir?',
-            'desc': 'Diyabet hakkında temel bilgiler ve önlemler.',
-            'youtube': 'e7nhZFvV_jg',
-            'category': 'Diyabet'
-        },
-        {
-            'title': 'Evde Egzersiz Önerileri',
-            'desc': 'Evde kolayca yapabileceğiniz egzersizler.',
-            'youtube': 'CJpDQHj_KNU',
-            'category': 'Egzersiz'
-        }
-    ]
+    try:
+        with open('health_library_data.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            contents = data['contents']
+    except FileNotFoundError:
+        flash('Sağlık kütüphanesi içeriği yüklenemedi.', 'error')
+        contents = []
     return render_template('health_library.html', contents=contents)
 
 if __name__ == '__main__':

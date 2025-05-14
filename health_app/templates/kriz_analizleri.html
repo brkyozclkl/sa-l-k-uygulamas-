@@ -58,38 +58,46 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="pregnancies" class="form-label">Hamilelik Sayısı</label>
                                         <input type="number" class="form-control" id="pregnancies" name="pregnancies" required>
+                                        <small class="text-muted">Normal: 0-5 arası</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="glucose" class="form-label">Glikoz Seviyesi</label>
+                                        <label for="glucose" class="form-label">Glikoz Seviyesi (mg/dL)</label>
                                         <input type="number" class="form-control" id="glucose" name="glucose" required>
+                                        <small class="text-muted">Normal: 70-100 mg/dL</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="blood_pressure" class="form-label">Kan Basıncı</label>
+                                        <label for="blood_pressure" class="form-label">Kan Basıncı (mmHg)</label>
                                         <input type="number" class="form-control" id="blood_pressure" name="blood_pressure" required>
+                                        <small class="text-muted">Normal: 90-120 mmHg</small>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label for="skin_thickness" class="form-label">Cilt Kalınlığı</label>
+                                        <label for="skin_thickness" class="form-label">Cilt Kalınlığı (mm)</label>
                                         <input type="number" class="form-control" id="skin_thickness" name="skin_thickness" required>
+                                        <small class="text-muted">Normal: 10-50 mm</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="insulin" class="form-label">İnsülin Seviyesi</label>
+                                        <label for="insulin" class="form-label">İnsülin Seviyesi (mu U/ml)</label>
                                         <input type="number" class="form-control" id="insulin" name="insulin" required>
+                                        <small class="text-muted">Normal: 2.6-24.9 mu U/ml</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="bmi" class="form-label">Vücut Kitle İndeksi</label>
                                         <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" required>
+                                        <small class="text-muted">Normal: 18.5-24.9</small>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="diabetes_pedigree" class="form-label">Diyabet Soy Ağacı Fonksiyonu</label>
                                         <input type="number" class="form-control" id="diabetes_pedigree" name="diabetes_pedigree" step="0.001" required>
+                                        <small class="text-muted">0-2 arası değer</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="age" class="form-label">Yaş</label>
                                         <input type="number" class="form-control" id="age" name="age" required>
+                                        <small class="text-muted">20-80 arası</small>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-danger mt-3">Analiz Et</button>
@@ -105,62 +113,64 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="heart_age" class="form-label">Yaş</label>
                                         <input type="number" class="form-control" id="heart_age" name="heart_age" required>
+                                        <small class="text-muted">20-80 arası</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="sex" class="form-label">Cinsiyet (0: Kadın, 1: Erkek)</label>
-                                        <input type="number" class="form-control" id="sex" name="sex" min="0" max="1" required>
+                                        <label for="sex" class="form-label">Cinsiyet</label>
+                                        <select class="form-select" id="sex" name="sex" required>
+                                            <option value="0">Kadın</option>
+                                            <option value="1">Erkek</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="cp" class="form-label">Göğüs Ağrısı Tipi</label>
-                                        <input type="number" class="form-control" id="cp" name="cp" min="0" max="3" required>
+                                        <select class="form-select" id="cp" name="cp" required>
+                                            <option value="0">Ağrı yok</option>
+                                            <option value="1">Hafif ağrı</option>
+                                            <option value="2">Orta şiddetli ağrı</option>
+                                            <option value="3">Şiddetli ağrı</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label for="trestbps" class="form-label">Dinlenme Kan Basıncı</label>
+                                        <label for="trestbps" class="form-label">Dinlenme Kan Basıncı (mmHg)</label>
                                         <input type="number" class="form-control" id="trestbps" name="trestbps" required>
+                                        <small class="text-muted">Normal: 90-120 mmHg</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="chol" class="form-label">Kolesterol (mg/dl)</label>
                                         <input type="number" class="form-control" id="chol" name="chol" required>
+                                        <small class="text-muted">Normal: 125-200 mg/dl</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="fbs" class="form-label">Açlık Kan Şekeri > 120 mg/dl</label>
-                                        <input type="number" class="form-control" id="fbs" name="fbs" min="0" max="1" required>
+                                        <label for="fbs" class="form-label">Açlık Kan Şekeri</label>
+                                        <select class="form-select" id="fbs" name="fbs" required>
+                                            <option value="0">120 mg/dl'den düşük</option>
+                                            <option value="1">120 mg/dl'den yüksek</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label for="restecg" class="form-label">EKG Sonuçları</label>
-                                        <input type="number" class="form-control" id="restecg" name="restecg" min="0" max="2" required>
+                                        <select class="form-select" id="restecg" name="restecg" required>
+                                            <option value="0">Normal</option>
+                                            <option value="1">ST-T dalga anormalliği</option>
+                                            <option value="2">Sol ventrikül hipertrofisi</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="thalach" class="form-label">Maksimum Kalp Atış Hızı</label>
                                         <input type="number" class="form-control" id="thalach" name="thalach" required>
+                                        <small class="text-muted">Normal: 60-100 atım/dk</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="exang" class="form-label">Egzersiz Kaynaklı Anjina</label>
-                                        <input type="number" class="form-control" id="exang" name="exang" min="0" max="1" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="oldpeak" class="form-label">ST Depresyonu</label>
-                                        <input type="number" class="form-control" id="oldpeak" name="oldpeak" step="0.1" required>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="slope" class="form-label">ST Segment Eğimi</label>
-                                        <input type="number" class="form-control" id="slope" name="slope" min="0" max="2" required>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="ca" class="form-label">Floroskopi ile Görülen Damar Sayısı</label>
-                                        <input type="number" class="form-control" id="ca" name="ca" min="0" max="3" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="thal" class="form-label">Talasemi (0: Normal, 1: Sabit Defekt, 2: Geri Dönüşlü Defekt)</label>
-                                        <input type="number" class="form-control" id="thal" name="thal" min="0" max="2" required>
+                                        <label for="exang" class="form-label">Egzersiz Kaynaklı Göğüs Ağrısı</label>
+                                        <select class="form-select" id="exang" name="exang" required>
+                                            <option value="0">Hayır</option>
+                                            <option value="1">Evet</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-danger mt-3">Analiz Et</button>

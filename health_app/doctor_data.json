@@ -1,111 +1,127 @@
 {
     "keyword_doctor_map": [
-        {
-            "pattern": "baş ağrısı|migren|başım ağrıyor|bas agrisi",
-            "doctor": {
-                "name": "Dr. Ahmet Can",
-                "specialty": "Nöroloji Uzmanı",
-                "rating": 4.6,
-                "home_remedies": [
-                    "Karanlık ve sessiz bir odada dinlenin",
-                    "Bol su için",
-                    "Başınıza soğuk kompres uygulayın",
-                    "Stresten uzak durun",
-                    "Düzenli uyku uyuyun"
-                ],
-                "recommendation": "Baş ağrınızın şiddeti ve süresi önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir nöroloji uzmanına başvurmanızı öneririm. Ayrıca baş ağrınızın yanında bulantı, kusma veya görme bozukluğu gibi belirtiler varsa acil servise başvurmanız gerekebilir."
-            }
-        },
-        {
-            "pattern": "karın ağrısı|mide|ishal|kabızlık|karin agrisi|karin ağrısı",
-            "doctor": {
-                "name": "Dr. Ayşe Yılmaz",
-                "specialty": "Dahiliye Uzmanı",
-                "rating": 4.8,
-                "home_remedies": [
-                    "Hafif ve sindirimi kolay yiyecekler tüketin",
-                    "Bol su için",
-                    "Sıcak su torbası kullanın",
-                    "Bitki çayları için (nane, papatya)",
-                    "Dinlenin ve stresten uzak durun"
-                ],
-                "recommendation": "Karın ağrınızın yeri ve şiddeti önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir dahiliye uzmanına başvurmanızı öneririm. Ayrıca ateş, bulantı, kusma gibi belirtiler varsa acil servise başvurmanız gerekebilir."
-            }
-        },
-        {
-            "pattern": "göğüs ağrısı|çarpıntı|kalp|nefes darlığı|gogus agrisi",
-            "doctor": {
-                "name": "Dr. Mehmet Demir",
-                "specialty": "Kardiyoloji Uzmanı",
-                "rating": 4.7,
-                "home_remedies": [
-                    "Dinlenin ve sakin kalın",
-                    "Derin nefes alın",
-                    "Stresten uzak durun",
-                    "Sigara ve alkolden kaçının",
-                    "Düzenli egzersiz yapın"
-                ],
-                "recommendation": "Göğüs ağrısı ciddi bir belirti olabilir. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir kardiyoloji uzmanına başvurmanızı öneririm. Ayrıca nefes darlığı, çarpıntı gibi belirtiler varsa acil servise başvurmanız gerekebilir."
-            }
-        },
-        {
-            "pattern": "cilt|döküntü|kaşıntı|sivilce|egzama|leke",
-            "doctor": {
-                "name": "Dr. Zeynep Yıldız",
-                "specialty": "Dermatoloji Uzmanı",
-                "rating": 4.8,
-                "home_remedies": [
-                    "Cildinizi nemlendirin",
-                    "Güneşten korunun",
-                    "Hassas cilt ürünleri kullanın",
-                    "Bol su için",
-                    "Stresten uzak durun"
-                ],
-                "recommendation": "Cilt sorunlarınızın şiddeti ve yaygınlığı önemli. Eğer sorun şiddetli ve yaygınsa, mutlaka bir dermatoloji uzmanına başvurmanızı öneririm. Ayrıca kaşıntı, yanma gibi belirtiler varsa acil servise başvurmanız gerekebilir."
-            }
-        },
-        {
-            "pattern": "diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık",
-            "doctor": {
-                "name": "Dr. Elif Kaya",
-                "specialty": "Endokrinoloji Uzmanı",
-                "rating": 4.9,
-                "home_remedies": [
-                    "Düzenli beslenin",
-                    "Egzersiz yapın",
-                    "Bol su için",
-                    "Stresten uzak durun",
-                    "Düzenli uyku uyuyun"
-                ],
-                "recommendation": "Hormonal sorunlar ciddiye alınmalıdır. Eğer belirtileriniz şiddetli ve uzun süredir devam ediyorsa, mutlaka bir endokrinoloji uzmanına başvurmanızı öneririm. Ayrıca kilo kaybı, halsizlik gibi belirtiler varsa acil servise başvurmanız gerekebilir."
-            }
+      {
+        "pattern": "(baş|kafa|şakak|alın|ense)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+zonklama|\\s+baskı|\\s+sancı)|migren|gerilim tipi|sinüzit|ışığa hassasiyet|sesle tetiklenen|göz üstü|boyunla ilgili",
+        "doctor": {
+          "name": "Dr. Ahmet Can",
+          "specialty": "Nöroloji Uzmanı",
+          "rating": 4.6,
+          "home_remedies": [
+            "Karanlık ve sessiz bir odada dinlenin",
+            "Bol su için, dehidrasyon baş ağrısını tetikleyebilir",
+            "Başınıza soğuk veya sıcak kompres uygulayın",
+            "Gözlerinizi dinlendirin, ekran süresini azaltın",
+            "Kafein alımınızı kontrol altında tutun",
+            "Stresten uzak durun, nefes egzersizleri yapın",
+            "Lavanta yağı gibi doğal yağlarla aromaterapi deneyin",
+            "Aşırı aç kalmamaya dikkat edin"
+          ],
+          "recommendation": "Baş ağrılarınız tekrarlıyorsa veya günlük yaşamınızı etkiliyorsa bir nöroloji uzmanına başvurmalısınız. Özellikle baş ağrısına bulantı, kusma, görme kaybı, baş dönmesi, konuşma bozukluğu gibi belirtiler eşlik ediyorsa zaman kaybetmeden bir sağlık kuruluşuna gitmelisiniz."
         }
+      },
+      {
+        "pattern": "(karın|mide|bağırsak)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+sancı|\\s+kramp|\\s+batma)|ishal|kabız|gaz sancısı|hazımsızlık|şişkinlik|midem bulanıyor|karın guruldaması|mide ekşimesi|mide yanması|yemek sonrası",
+        "doctor": {
+          "name": "Dr. Ayşe Yılmaz",
+          "specialty": "Dahiliye Uzmanı",
+          "rating": 4.8,
+          "home_remedies": [
+            "Hafif ve sindirimi kolay yiyecekler tercih edin (haşlanmış patates, pirinç, muz gibi)",
+            "Zencefil çayı mide bulantısını hafifletebilir",
+            "Bol su tüketin, özellikle ishal durumunda sıvı kaybı için önemlidir",
+            "Sıcak su torbası karın bölgesindeki kasları gevşetebilir",
+            "Yoğurt ve kefir gibi probiyotikler tüketin",
+            "Yağlı, baharatlı ve işlenmiş gıdalardan kaçının",
+            "Yemekleri yavaş yiyin, iyi çiğneyin",
+            "Lifli gıdaları dengeli tüketin (kabızlıkta artırın, ishalde azaltın)"
+          ],
+          "recommendation": "Karın veya mide ağrısı farklı sebeplerden kaynaklanabilir. Ağrınız şiddetliyse, 24 saatten uzun sürüyorsa ya da ateş, kusma, kanlı dışkı gibi belirtiler eşlik ediyorsa, bir iç hastalıkları uzmanına başvurmanızı öneririm."
+        }
+      },
+      {
+        "pattern": "(göğüs|kalp)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+sıkışma|\\s+baskı|\\s+yanma)|çarpıntı|nefes darlığı|kalbim ağrıyor|sol göğüs|kalp bölgesi|nefes alırken batma|göğüste daralma|hızlı nabız|ritim bozukluğu|panik atak benzeri|yüksek tansiyon|hipertansiyon",
+        "doctor": {
+          "name": "Dr. Mehmet Demir",
+          "specialty": "Kardiyoloji Uzmanı",
+          "rating": 4.7,
+          "home_remedies": [
+            "Dinlenin, stresten uzak bir ortamda olun",
+            "Yavaş ve derin nefesler alarak gevşeme teknikleri uygulayın",
+            "Kafein ve ağır yemeklerden kaçının",
+            "Tuz tüketimini azaltın",
+            "Sigara ve alkol kullanımını bırakın",
+            "Günde 30 dakika hafif yürüyüş yapmaya özen gösterin",
+            "Aşırı efor gerektiren aktivitelerden kaçının",
+            "Düzenli tansiyon ölçümü yapın"
+          ],
+          "recommendation": "Göğüs ağrısı, kalp kaynaklı olabileceği için mutlaka ciddiye alınmalıdır. Özellikle dinlenirken ortaya çıkan, sol kola yayılan, terleme, mide bulantısı ya da baş dönmesiyle birlikte olan göğüs ağrısı için acilen kardiyoloji uzmanına başvurmalısınız."
+        }
+      },
+      {
+        "pattern": "(cilt|deri)(\\s+sorunu|\\s+problemi|\\s+kızarıklık|\\s+kaşıntı|\\s+döküntü|\\s+leke|\\s+yara|\\s+şişlik|\\s+kabarıklık|\\s+yanma|\\s+soyulma)|akne|sivilce|egzama|pullanma|alerji|kuruluk|yağ bezesi|iltihaplı sivilce",
+        "doctor": {
+          "name": "Dr. Zeynep Yıldız",
+          "specialty": "Dermatoloji Uzmanı",
+          "rating": 4.8,
+          "home_remedies": [
+            "Cildinizi her gün nazikçe temizleyin",
+            "Nemlendirici kullanın, özellikle kuru ciltler için",
+            "Güneş koruyucu kullanın",
+            "Alerjenlerden uzak durun (sabun, deterjan, parfüm vs.)",
+            "Bitkisel içerikli losyonlar (örneğin aloe vera) uygulayın",
+            "Bol su için, su cildin elastikiyetini artırır",
+            "Çinko ve C vitamini içeren gıdalar tüketin",
+            "Cildinizi kaşımamaya çalışın"
+          ],
+          "recommendation": "Cilt sorunlarınız kalıcıysa, yaygınsa veya giderek kötüleşiyorsa dermatoloji uzmanına başvurun. Özellikle döküntüye ateş, yaygın şişlik ya da ağrı eşlik ediyorsa acil müdahale gerekebilir."
+        }
+      },
+      {
+        "pattern": "(diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık|şeker hastalığı|insülin|kan şekeri|kilo kaybı|kilo alma|hormonal|obez|zayıf|şişman|endokrin|guatr|hipotiroid|hipertiroidi|prediyabet|açlık kan şekeri|metabolizma yavaşlığı|kilo verememe|kilo kontrolü)",
+        "doctor": {
+          "name": "Dr. Elif Kaya",
+          "specialty": "Endokrinoloji Uzmanı",
+          "rating": 4.9,
+          "home_remedies": [
+            "Düzenli ve dengeli beslenin (özellikle lifli ve düşük glisemik indeksli gıdalar)",
+            "Günlük yürüyüş ve egzersiz programı oluşturun",
+            "Kan şekeri takibi yapın",
+            "Stresten uzak kalmaya çalışın, meditasyon uygulayın",
+            "Yeterli uyku uyuyun (en az 7-8 saat)",
+            "Basit karbonhidratlardan kaçının",
+            "Ara öğün alışkanlığı edinin",
+            "Günde en az 2 litre su tüketin"
+          ],
+          "recommendation": "Kilo alımı, zayıflama, ani halsizlik, el titremesi gibi hormonal değişiklikler endokrin sistemi ilgilendirebilir. Bu tür belirtileriniz varsa mutlaka bir endokrinoloji uzmanına başvurmanızı tavsiye ederim. Diyabet gibi hastalıklar erken tanıyla daha kolay yönetilebilir."
+        }
+      }
     ],
     "all_doctors": [
-        {
-            "name": "Dr. Ayşe Yılmaz",
-            "specialty": "Dahiliye Uzmanı",
-            "rating": 4.8
-        },
-        {
-            "name": "Dr. Mehmet Demir",
-            "specialty": "Kardiyoloji Uzmanı",
-            "rating": 4.7
-        },
-        {
-            "name": "Dr. Elif Kaya",
-            "specialty": "Endokrinoloji Uzmanı",
-            "rating": 4.9
-        },
-        {
-            "name": "Dr. Ahmet Can",
-            "specialty": "Nöroloji Uzmanı",
-            "rating": 4.6
-        },
-        {
-            "name": "Dr. Zeynep Yıldız",
-            "specialty": "Dermatoloji Uzmanı",
-            "rating": 4.8
-        }
+      {
+        "name": "Dr. Ayşe Yılmaz",
+        "specialty": "Dahiliye Uzmanı",
+        "rating": 4.8
+      },
+      {
+        "name": "Dr. Mehmet Demir",
+        "specialty": "Kardiyoloji Uzmanı",
+        "rating": 4.7
+      },
+      {
+        "name": "Dr. Elif Kaya",
+        "specialty": "Endokrinoloji Uzmanı",
+        "rating": 4.9
+      },
+      {
+        "name": "Dr. Ahmet Can",
+        "specialty": "Nöroloji Uzmanı",
+        "rating": 4.6
+      },
+      {
+        "name": "Dr. Zeynep Yıldız",
+        "specialty": "Dermatoloji Uzmanı",
+        "rating": 4.8
+      }
     ]
-} 
+  }
+  

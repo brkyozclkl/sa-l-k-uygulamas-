@@ -1,0 +1,169 @@
+{
+    "questions": [
+        {
+            "id": "q1",
+            "category": "mood",
+            "text": "Bugün kendini nasıl hissediyorsun?",
+            "options": [
+                {"label": "😃 Çok iyi", "value": 3},
+                {"label": "🙂 İyi", "value": 2},
+                {"label": "😐 Nötr", "value": 1},
+                {"label": "😔 Kötü", "value": 0}
+            ]
+        },
+        {
+            "id": "q2",
+            "category": "mood",
+            "text": "Son günlerde enerjin nasıldı?",
+            "options": [
+                {"label": "⚡ Yüksek", "value": 3},
+                {"label": "😊 İyi", "value": 2},
+                {"label": "😴 Düşük", "value": 1},
+                {"label": "🥱 Çok düşük", "value": 0}
+            ]
+        },
+        {
+            "id": "q3",
+            "category": "stress",
+            "text": "Son bir haftada ne kadar stresliydin?",
+            "options": [
+                {"label": "😌 Hiç", "value": 0},
+                {"label": "🙂 Az", "value": 1},
+                {"label": "😕 Orta", "value": 2},
+                {"label": "😣 Çok", "value": 3}
+            ]
+        },
+        {
+            "id": "q4",
+            "category": "stress",
+            "text": "Son günlerde kendini ne kadar gergin hissettin?",
+            "options": [
+                {"label": "😌 Hiç", "value": 0},
+                {"label": "🙂 Az", "value": 1},
+                {"label": "😕 Orta", "value": 2},
+                {"label": "😣 Çok", "value": 3}
+            ]
+        },
+        {
+            "id": "q5",
+            "category": "sleep",
+            "text": "Son bir haftada kaç gece 7 saatten az uyudun?",
+            "options": [
+                {"label": "0-1 gece", "value": 3},
+                {"label": "2-3 gece", "value": 2},
+                {"label": "4-5 gece", "value": 1},
+                {"label": "6-7 gece", "value": 0}
+            ]
+        },
+        {
+            "id": "q6",
+            "category": "anxiety",
+            "text": "Son günlerde kaygı seviyen nasıldı?",
+            "options": [
+                {"label": "😌 Çok düşük", "value": 3},
+                {"label": "🙂 Düşük", "value": 2},
+                {"label": "😕 Orta", "value": 1},
+                {"label": "😣 Yüksek", "value": 0}
+            ]
+        },
+        {
+            "id": "q7",
+            "category": "social",
+            "text": "Yakınlarınla ne sıklıkla iletişim kurdun?",
+            "options": [
+                {"label": "Her gün", "value": 3},
+                {"label": "Sık", "value": 2},
+                {"label": "Nadiren", "value": 1},
+                {"label": "Hiç", "value": 0}
+            ]
+        },
+        {
+            "id": "q8",
+            "category": "social",
+            "text": "Kendini ne kadar yalnız hissettin?",
+            "options": [
+                {"label": "Hiç", "value": 3},
+                {"label": "Az", "value": 2},
+                {"label": "Orta", "value": 1},
+                {"label": "Çok", "value": 0}
+            ]
+        },
+        {
+            "id": "q9",
+            "category": "motivation",
+            "text": "Gün içinde ne kadar motive hissediyorsun?",
+            "options": [
+                {"label": "Çok", "value": 3},
+                {"label": "Orta", "value": 2},
+                {"label": "Az", "value": 1},
+                {"label": "Hiç", "value": 0}
+            ]
+        },
+        {
+            "id": "q10",
+            "category": "selfcare",
+            "text": "Kendine vakit ayırabildin mi?",
+            "options": [
+                {"label": "Evet", "value": 3},
+                {"label": "Kısmen", "value": 2},
+                {"label": "Nadiren", "value": 1},
+                {"label": "Hayır", "value": 0}
+            ]
+        }
+    ],
+    "feedback": {
+        "mood": {
+            "high": {"text": "Harika! Pozitif ve enerjik hissediyorsun.", "emoji": "😃", "threshold": 2.5},
+            "medium": {"text": "İyi gidiyorsun, enerjin fena değil.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Biraz düşük hissediyorsun, kendine vakit ayır.", "emoji": "😐", "threshold": 1.0},
+            "very_low": {"text": "Moralin düşük, biraz dinlenmeye ve kendini şımartmaya ne dersin?", "emoji": "😔"}
+        },
+        "stress": {
+            "very_low": {"text": "Stres seviyen çok düşük, harika!", "emoji": "😌", "threshold": 0.5},
+            "low": {"text": "Stresin az, iyi gidiyorsun.", "emoji": "🙂", "threshold": 1.5},
+            "medium": {"text": "Orta düzeyde stresin var, biraz rahatlamaya çalış.", "emoji": "😕", "threshold": 2.2},
+            "high": {"text": "Stres seviyen yüksek, kendine iyi bak ve gerekirse destek al.", "emoji": "😣"}
+        },
+        "sleep": {
+            "high": {"text": "Uyku düzenin çok iyi!", "emoji": "😴", "threshold": 2.5},
+            "medium": {"text": "Uyku kaliten fena değil.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Uyku kaliten düşük, akşam ekran süresini azaltmayı dene.", "emoji": "🌙"}
+        },
+        "anxiety": {
+            "high": {"text": "Kaygı seviyen çok düşük, harika!", "emoji": "😌", "threshold": 2.5},
+            "medium": {"text": "Kaygı seviyen düşük.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Kaygı seviyen yüksek, rahatlatıcı aktiviteler dene.", "emoji": "😟"}
+        },
+        "social": {
+            "high": {"text": "Sosyal desteğin çok iyi!", "emoji": "👫", "threshold": 2.5},
+            "medium": {"text": "Sosyal desteğin fena değil.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Daha fazla iletişim kurmaya çalış.", "emoji": "📞"}
+        },
+        "motivation": {
+            "high": {"text": "Motivasyonun yüksek!", "emoji": "💪", "threshold": 2.5},
+            "medium": {"text": "Motivasyonun fena değil.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Motivasyonun düşük, küçük hedefler koymayı dene.", "emoji": "🪫"}
+        },
+        "selfcare": {
+            "high": {"text": "Kendine çok iyi bakıyorsun!", "emoji": "🧖", "threshold": 2.5},
+            "medium": {"text": "Kendine fena bakmıyorsun.", "emoji": "🙂", "threshold": 1.5},
+            "low": {"text": "Kendine daha fazla vakit ayırmalısın.", "emoji": "🛀"}
+        }
+    },
+    "general_analysis": {
+        "multiple_low": {
+            "threshold": 3,
+            "text": "Genel olarak düşük bir dönemden geçiyorsun. Kendine şefkat göster, gerekirse bir uzmandan destek almaktan çekinme."
+        },
+        "stress_motivation": {
+            "stress_threshold": 2,
+            "motivation_threshold": 1.2,
+            "text": "Stresin yüksek, motivasyonun düşük. Nefes egzersizleri ve küçük hedefler koymak iyi gelebilir."
+        },
+        "multiple_high": {
+            "threshold": 4,
+            "text": "Harika gidiyorsun! Sağlıklı alışkanlıklarını sürdürmeye devam et."
+        },
+        "default": "Genel olarak iyi gidiyorsun! Küçük iyileştirmelerle daha da iyi hissedebilirsin."
+    }
+} 
