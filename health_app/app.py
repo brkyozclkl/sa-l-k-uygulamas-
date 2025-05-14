@@ -25,53 +25,80 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Besin veritabanını yükle
-FOOD_DB = [
-    {
-        'id': 1,
-        'name': 'Tavuk Göğsü (Izgara)',
-        'calories': 165,
-        'protein': 31,
-        'carbs': 0,
-        'fat': 3.6,
-        'portion': 100
-    },
-    {
-        'id': 2,
-        'name': 'Pirinç Pilavı',
-        'calories': 130,
-        'protein': 2.7,
-        'carbs': 28,
-        'fat': 0.3,
-        'portion': 100
-    },
-    {
-        'id': 3,
-        'name': 'Mercimek Çorbası',
-        'calories': 90,
-        'protein': 6,
-        'carbs': 15,
-        'fat': 1.5,
-        'portion': 250
-    },
-    {
-        'id': 4,
-        'name': 'Salata (Karışık)',
-        'calories': 50,
-        'protein': 2,
-        'carbs': 8,
-        'fat': 1,
-        'portion': 200
-    },
-    {
-        'id': 5,
-        'name': 'Yoğurt',
-        'calories': 60,
-        'protein': 3.5,
-        'carbs': 4.7,
-        'fat': 3.3,
-        'portion': 100
-    }
-]  # Örnek besin veritabanı
+def load_food_db():
+    try:
+        with open('food_db.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+FOOD_DB = load_food_db()
+
+# Besin veritabanını güncelle
+def save_food_db():
+    with open('food_db.json', 'w', encoding='utf-8') as f:
+        json.dump(FOOD_DB, f, ensure_ascii=False, indent=4)
+
+# Besin ekleme endpoint'i
+@app.route('/add-food', methods=['POST'])
+@login_required
+def add_food():
+    try:
+        new_food = {
+            'id': len(FOOD_DB) + 1,
+            'name': request.form.get('name'),
+            'calories': float(request.form.get('calories')),
+            'protein': float(request.form.get('protein')),
+            'carbs': float(request.form.get('carbs')),
+            'fat': float(request.form.get('fat')),
+            'portion': float(request.form.get('portion', 100))
+        }
+        FOOD_DB.append(new_food)
+        save_food_db()
+        return jsonify({'success': True, 'message': 'Besin başarıyla eklendi.'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
+# Besin güncelleme endpoint'i
+@app.route('/update-food/<int:food_id>', methods=['PUT'])
+@login_required
+def update_food(food_id):
+    try:
+        food = next((f for f in FOOD_DB if f['id'] == food_id), None)
+        if not food:
+            return jsonify({'success': False, 'message': 'Besin bulunamadı.'}), 404
+        
+        data = request.get_json()
+        food.update({
+            'name': data.get('name', food['name']),
+            'calories': float(data.get('calories', food['calories'])),
+            'protein': float(data.get('protein', food['protein'])),
+            'carbs': float(data.get('carbs', food['carbs'])),
+            'fat': float(data.get('fat', food['fat'])),
+            'portion': float(data.get('portion', food['portion']))
+        })
+        save_food_db()
+        return jsonify({'success': True, 'message': 'Besin başarıyla güncellendi.'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
+# Besin silme endpoint'i
+@app.route('/delete-food/<int:food_id>', methods=['DELETE'])
+@login_required
+def delete_food(food_id):
+    try:
+        global FOOD_DB
+        FOOD_DB = [f for f in FOOD_DB if f['id'] != food_id]
+        save_food_db()
+        return jsonify({'success': True, 'message': 'Besin başarıyla silindi.'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
+# Tüm besinleri listeleme endpoint'i
+@app.route('/list-foods', methods=['GET'])
+@login_required
+def list_foods():
+    return jsonify(FOOD_DB)
 
 # Initialize extensions
 db = SQLAlchemy(app)
@@ -507,81 +534,16 @@ def blood_analysis():
 
 @app.route('/doctor-recommendation', methods=['GET', 'POST'])
 def doctor_recommendation():
-    # Priority-ordered keyword-doctor mapping with home remedies
-    keyword_doctor_map = [
-        (r'baş ağrısı|migren|başım ağrıyor|bas agrisi', {
-            'name': 'Dr. Ahmet Can',
-            'specialty': 'Nöroloji Uzmanı',
-            'rating': 4.6,
-            'home_remedies': [
-                'Karanlık ve sessiz bir odada dinlenin',
-                'Bol su için',
-                'Başınıza soğuk kompres uygulayın',
-                'Stresten uzak durun',
-                'Düzenli uyku uyuyun'
-            ],
-            'recommendation': 'Baş ağrınızın şiddeti ve süresi önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir nöroloji uzmanına başvurmanızı öneririm. Ayrıca baş ağrınızın yanında bulantı, kusma veya görme bozukluğu gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
-        }),
-        (r'karın ağrısı|mide|ishal|kabızlık|karin agrisi|karin ağrısı', {
-            'name': 'Dr. Ayşe Yılmaz',
-            'specialty': 'Dahiliye Uzmanı',
-            'rating': 4.8,
-            'home_remedies': [
-                'Hafif ve sindirimi kolay yiyecekler tüketin',
-                'Bol su için',
-                'Sıcak su torbası kullanın',
-                'Bitki çayları için (nane, papatya)',
-                'Dinlenin ve stresten uzak durun'
-            ],
-            'recommendation': 'Karın ağrınızın yeri ve şiddeti önemli. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir dahiliye uzmanına başvurmanızı öneririm. Ayrıca ateş, bulantı, kusma gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
-        }),
-        (r'göğüs ağrısı|çarpıntı|kalp|nefes darlığı|gogus agrisi', {
-            'name': 'Dr. Mehmet Demir',
-            'specialty': 'Kardiyoloji Uzmanı',
-            'rating': 4.7,
-            'home_remedies': [
-                'Dinlenin ve sakin kalın',
-                'Derin nefes alın',
-                'Stresten uzak durun',
-                'Sigara ve alkolden kaçının',
-                'Düzenli egzersiz yapın'
-            ],
-            'recommendation': 'Göğüs ağrısı ciddi bir belirti olabilir. Eğer ağrı şiddetli ve uzun süredir devam ediyorsa, mutlaka bir kardiyoloji uzmanına başvurmanızı öneririm. Ayrıca nefes darlığı, çarpıntı gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
-        }),
-        (r'cilt|döküntü|kaşıntı|sivilce|egzama|leke', {
-            'name': 'Dr. Zeynep Yıldız',
-            'specialty': 'Dermatoloji Uzmanı',
-            'rating': 4.8,
-            'home_remedies': [
-                'Cildinizi nemlendirin',
-                'Güneşten korunun',
-                'Hassas cilt ürünleri kullanın',
-                'Bol su için',
-                'Stresten uzak durun'
-            ],
-            'recommendation': 'Cilt sorunlarınızın şiddeti ve yaygınlığı önemli. Eğer sorun şiddetli ve yaygınsa, mutlaka bir dermatoloji uzmanına başvurmanızı öneririm. Ayrıca kaşıntı, yanma gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
-        }),
-        (r'diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık', {
-            'name': 'Dr. Elif Kaya',
-            'specialty': 'Endokrinoloji Uzmanı',
-            'rating': 4.9,
-            'home_remedies': [
-                'Düzenli beslenin',
-                'Egzersiz yapın',
-                'Bol su için',
-                'Stresten uzak durun',
-                'Düzenli uyku uyuyun'
-            ],
-            'recommendation': 'Hormonal sorunlar ciddiye alınmalıdır. Eğer belirtileriniz şiddetli ve uzun süredir devam ediyorsa, mutlaka bir endokrinoloji uzmanına başvurmanızı öneririm. Ayrıca kilo kaybı, halsizlik gibi belirtiler varsa acil servise başvurmanız gerekebilir.'
-        }),
-    ]
-    all_doctors = [
-        {'name': 'Dr. Ayşe Yılmaz', 'specialty': 'Dahiliye Uzmanı', 'rating': 4.8},
-        {'name': 'Dr. Mehmet Demir', 'specialty': 'Kardiyoloji Uzmanı', 'rating': 4.7},
-        {'name': 'Dr. Elif Kaya', 'specialty': 'Endokrinoloji Uzmanı', 'rating': 4.9},
-        {'name': 'Dr. Ahmet Can', 'specialty': 'Nöroloji Uzmanı', 'rating': 4.6},
-        {'name': 'Dr. Zeynep Yıldız', 'specialty': 'Dermatoloji Uzmanı', 'rating': 4.8},
-    ]
+    # Load doctor data from JSON file
+    try:
+        with open('doctor_data.json', 'r', encoding='utf-8') as f:
+            doctor_data = json.load(f)
+            keyword_doctor_map = [(item['pattern'], item['doctor']) for item in doctor_data['keyword_doctor_map']]
+            all_doctors = doctor_data['all_doctors']
+    except FileNotFoundError:
+        flash('Doktor verileri yüklenemedi.', 'error')
+        return redirect(url_for('dashboard'))
+
     matched_doctors = []
     complaint = None
     home_remedies = []

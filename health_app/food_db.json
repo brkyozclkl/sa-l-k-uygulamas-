@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "name": "Tavuk Göğsü (Izgara)",
+        "calories": 165,
+        "protein": 31,
+        "carbs": 0,
+        "fat": 3.6,
+        "portion": 100
+    },
+    {
+        "id": 2,
+        "name": "Pirinç Pilavı",
+        "calories": 130,
+        "protein": 2.7,
+        "carbs": 28,
+        "fat": 0.3,
+        "portion": 100
+    },
+    {
+        "id": 3,
+        "name": "Mercimek Çorbası",
+        "calories": 90,
+        "protein": 6,
+        "carbs": 15,
+        "fat": 1.5,
+        "portion": 250
+    },
+    {
+        "id": 4,
+        "name": "Salata (Karışık)",
+        "calories": 50,
+        "protein": 2,
+        "carbs": 8,
+        "fat": 1,
+        "portion": 200
+    },
+    {
+        "id": 5,
+        "name": "Yoğurt",
+        "calories": 60,
+        "protein": 3.5,
+        "carbs": 4.7,
+        "fat": 3.3,
+        "portion": 100
+    }
+] 
