@@ -1,127 +1,171 @@
 {
     "keyword_doctor_map": [
       {
-        "pattern": "(baş|kafa|şakak|alın|ense)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+zonklama|\\s+baskı|\\s+sancı)|migren|gerilim tipi|sinüzit|ışığa hassasiyet|sesle tetiklenen|göz üstü|boyunla ilgili",
+        "pattern": "(karın|mide|bağırsak|ishal|kabızlık|bulantı|kusma|gaz|şişkinlik|hazımsızlık|reflü|karın guruldaması|mide ekşimesi|mide yanması|yemek sonrası)",
+        "doctor": {
+          "name": "Dr. Selim Aksoy",
+          "specialty": "Gastroenteroloji Uzmanı",
+          "rating": 4.7,
+          "home_remedies": [
+            "Hafif ve sindirimi kolay yiyecekler tercih edin",
+            "Bol su tüketin",
+            "Yağlı, baharatlı ve işlenmiş gıdalardan kaçının",
+            "Yemekleri yavaş yiyin, iyi çiğneyin"
+          ],
+          "recommendation": "Karın ve sindirim sistemi şikayetleriniz için bir gastroenteroloji uzmanına başvurmanız önerilir. Şiddetli ağrı, kanama veya uzun süren şikayetlerde acil başvuru gereklidir."
+        }
+      },
+      {
+        "pattern": "(baş|kafa|şakak|alın|ense|baş dönmesi|vertigo|denge kaybı|migren|gerilim tipi|sinüzit|ışığa hassasiyet|göz üstü|boyunla ilgili)",
         "doctor": {
           "name": "Dr. Ahmet Can",
           "specialty": "Nöroloji Uzmanı",
           "rating": 4.6,
           "home_remedies": [
             "Karanlık ve sessiz bir odada dinlenin",
-            "Bol su için, dehidrasyon baş ağrısını tetikleyebilir",
-            "Başınıza soğuk veya sıcak kompres uygulayın",
-            "Gözlerinizi dinlendirin, ekran süresini azaltın",
-            "Kafein alımınızı kontrol altında tutun",
-            "Stresten uzak durun, nefes egzersizleri yapın",
-            "Lavanta yağı gibi doğal yağlarla aromaterapi deneyin",
-            "Aşırı aç kalmamaya dikkat edin"
+            "Bol su için",
+            "Başınıza soğuk veya sıcak kompres uygulayın"
           ],
-          "recommendation": "Baş ağrılarınız tekrarlıyorsa veya günlük yaşamınızı etkiliyorsa bir nöroloji uzmanına başvurmalısınız. Özellikle baş ağrısına bulantı, kusma, görme kaybı, baş dönmesi, konuşma bozukluğu gibi belirtiler eşlik ediyorsa zaman kaybetmeden bir sağlık kuruluşuna gitmelisiniz."
+          "recommendation": "Baş ağrısı ve baş dönmesi şikayetleriniz için bir nöroloji uzmanına başvurmalısınız. Ani ve şiddetli baş ağrısı, bilinç kaybı, konuşma bozukluğu gibi durumlarda acil başvuru gereklidir."
         }
       },
       {
-        "pattern": "(karın|mide|bağırsak)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+sancı|\\s+kramp|\\s+batma)|ishal|kabız|gaz sancısı|hazımsızlık|şişkinlik|midem bulanıyor|karın guruldaması|mide ekşimesi|mide yanması|yemek sonrası",
+        "pattern": "(nefes darlığı|astım|KOAH|öksürük|balgam|hırıltı|göğüs ağrısı|solunum|bronşit|zatürre)",
         "doctor": {
-          "name": "Dr. Ayşe Yılmaz",
-          "specialty": "Dahiliye Uzmanı",
+          "name": "Dr. Gülşah Yıldırım",
+          "specialty": "Göğüs Hastalıkları Uzmanı",
           "rating": 4.8,
           "home_remedies": [
-            "Hafif ve sindirimi kolay yiyecekler tercih edin (haşlanmış patates, pirinç, muz gibi)",
-            "Zencefil çayı mide bulantısını hafifletebilir",
-            "Bol su tüketin, özellikle ishal durumunda sıvı kaybı için önemlidir",
-            "Sıcak su torbası karın bölgesindeki kasları gevşetebilir",
-            "Yoğurt ve kefir gibi probiyotikler tüketin",
-            "Yağlı, baharatlı ve işlenmiş gıdalardan kaçının",
-            "Yemekleri yavaş yiyin, iyi çiğneyin",
-            "Lifli gıdaları dengeli tüketin (kabızlıkta artırın, ishalde azaltın)"
+            "Sigara ve alkol kullanımını bırakın",
+            "Tozlu ve kirli ortamlardan uzak durun",
+            "Bol su için, odanızı havalandırın"
           ],
-          "recommendation": "Karın veya mide ağrısı farklı sebeplerden kaynaklanabilir. Ağrınız şiddetliyse, 24 saatten uzun sürüyorsa ya da ateş, kusma, kanlı dışkı gibi belirtiler eşlik ediyorsa, bir iç hastalıkları uzmanına başvurmanızı öneririm."
+          "recommendation": "Nefes darlığı, öksürük ve göğüs ağrısı gibi şikayetleriniz için göğüs hastalıkları uzmanına başvurmalısınız. Ani başlayan ve şiddetli nefes darlığında acil başvuru gereklidir."
         }
       },
       {
-        "pattern": "(göğüs|kalp)(\\s+ağrısı|\\s+agrisi|\\s+agrısı|\\s+ağrıyor|\\s+agriyor|\\s+agrıyor|\\s+sıkışma|\\s+baskı|\\s+yanma)|çarpıntı|nefes darlığı|kalbim ağrıyor|sol göğüs|kalp bölgesi|nefes alırken batma|göğüste daralma|hızlı nabız|ritim bozukluğu|panik atak benzeri|yüksek tansiyon|hipertansiyon",
+        "pattern": "(çarpıntı|kalp|ritim|göğüs ağrısı|nabız|tansiyon|hipertansiyon|düşük tansiyon|yorgunluk|bayılma)",
         "doctor": {
           "name": "Dr. Mehmet Demir",
           "specialty": "Kardiyoloji Uzmanı",
           "rating": 4.7,
           "home_remedies": [
             "Dinlenin, stresten uzak bir ortamda olun",
-            "Yavaş ve derin nefesler alarak gevşeme teknikleri uygulayın",
-            "Kafein ve ağır yemeklerden kaçının",
             "Tuz tüketimini azaltın",
-            "Sigara ve alkol kullanımını bırakın",
-            "Günde 30 dakika hafif yürüyüş yapmaya özen gösterin",
-            "Aşırı efor gerektiren aktivitelerden kaçının",
             "Düzenli tansiyon ölçümü yapın"
           ],
-          "recommendation": "Göğüs ağrısı, kalp kaynaklı olabileceği için mutlaka ciddiye alınmalıdır. Özellikle dinlenirken ortaya çıkan, sol kola yayılan, terleme, mide bulantısı ya da baş dönmesiyle birlikte olan göğüs ağrısı için acilen kardiyoloji uzmanına başvurmalısınız."
+          "recommendation": "Çarpıntı, göğüs ağrısı ve kalp ile ilgili şikayetleriniz için kardiyoloji uzmanına başvurmalısınız. Göğüs ağrısı ve bayılma durumunda acil başvuru gereklidir."
         }
       },
       {
-        "pattern": "(cilt|deri)(\\s+sorunu|\\s+problemi|\\s+kızarıklık|\\s+kaşıntı|\\s+döküntü|\\s+leke|\\s+yara|\\s+şişlik|\\s+kabarıklık|\\s+yanma|\\s+soyulma)|akne|sivilce|egzama|pullanma|alerji|kuruluk|yağ bezesi|iltihaplı sivilce",
+        "pattern": "(cilt|deri|döküntü|kaşıntı|leke|yara|şişlik|kabarıklık|akne|sivilce|egzama|alerji|kuruluk|pullanma)",
         "doctor": {
           "name": "Dr. Zeynep Yıldız",
           "specialty": "Dermatoloji Uzmanı",
           "rating": 4.8,
           "home_remedies": [
             "Cildinizi her gün nazikçe temizleyin",
-            "Nemlendirici kullanın, özellikle kuru ciltler için",
-            "Güneş koruyucu kullanın",
-            "Alerjenlerden uzak durun (sabun, deterjan, parfüm vs.)",
-            "Bitkisel içerikli losyonlar (örneğin aloe vera) uygulayın",
-            "Bol su için, su cildin elastikiyetini artırır",
-            "Çinko ve C vitamini içeren gıdalar tüketin",
-            "Cildinizi kaşımamaya çalışın"
+            "Nemlendirici kullanın",
+            "Alerjenlerden uzak durun"
           ],
-          "recommendation": "Cilt sorunlarınız kalıcıysa, yaygınsa veya giderek kötüleşiyorsa dermatoloji uzmanına başvurun. Özellikle döküntüye ateş, yaygın şişlik ya da ağrı eşlik ediyorsa acil müdahale gerekebilir."
+          "recommendation": "Cilt döküntüsü, kaşıntı ve benzeri şikayetleriniz için dermatoloji uzmanına başvurmalısınız. Yaygın döküntü ve ateş durumunda acil başvuru gereklidir."
         }
       },
       {
-        "pattern": "(diyabet|şeker|tiroid|hormon|obezite|kilo|zayıflık|şeker hastalığı|insülin|kan şekeri|kilo kaybı|kilo alma|hormonal|obez|zayıf|şişman|endokrin|guatr|hipotiroid|hipertiroidi|prediyabet|açlık kan şekeri|metabolizma yavaşlığı|kilo verememe|kilo kontrolü)",
+        "pattern": "(eklem|kas|ağrı|şişlik|hareket kısıtlılığı|romatizma|artrit|diz ağrısı|bel ağrısı|sırt ağrısı|boyun ağrısı)",
+        "doctor": {
+          "name": "Dr. Cihan Kaya",
+          "specialty": "Fizik Tedavi ve Rehabilitasyon Uzmanı",
+          "rating": 4.7,
+          "home_remedies": [
+            "Dinlenin, eklemi zorlamayın",
+            "Buz veya sıcak uygulama yapın",
+            "Hafif egzersizler yapın"
+          ],
+          "recommendation": "Eklem ve kas ağrılarınız için fizik tedavi ve rehabilitasyon uzmanına başvurabilirsiniz. Şiddetli şişlik ve hareket kısıtlılığında ortopedi veya romatoloji de değerlendirilebilir."
+        }
+      },
+      {
+        "pattern": "(idrar|sık idrara çıkma|yanma|idrar yolu|böbrek|idrar kaçırma|kanlı idrar)",
+        "doctor": {
+          "name": "Dr. Burak Uslu",
+          "specialty": "Üroloji Uzmanı",
+          "rating": 4.6,
+          "home_remedies": [
+            "Bol su için",
+            "Hijyene dikkat edin",
+            "Kafeinli içeceklerden kaçının"
+          ],
+          "recommendation": "İdrar yolu şikayetleriniz için üroloji uzmanına başvurmalısınız. Ateş ve yanma ile birlikte kanlı idrar varsa acil başvuru gereklidir."
+        }
+      },
+      {
+        "pattern": "(kadın|vajina|adet|regl|düzensizlik|akıntı|ağrılı adet|gebelik|hamilelik|doğum|jinekoloji)",
         "doctor": {
           "name": "Dr. Elif Kaya",
-          "specialty": "Endokrinoloji Uzmanı",
+          "specialty": "Kadın Hastalıkları ve Doğum Uzmanı",
           "rating": 4.9,
           "home_remedies": [
-            "Düzenli ve dengeli beslenin (özellikle lifli ve düşük glisemik indeksli gıdalar)",
-            "Günlük yürüyüş ve egzersiz programı oluşturun",
-            "Kan şekeri takibi yapın",
-            "Stresten uzak kalmaya çalışın, meditasyon uygulayın",
-            "Yeterli uyku uyuyun (en az 7-8 saat)",
-            "Basit karbonhidratlardan kaçının",
-            "Ara öğün alışkanlığı edinin",
-            "Günde en az 2 litre su tüketin"
+            "Düzenli ve dengeli beslenin",
+            "Hijyene dikkat edin",
+            "Ağrılı günlerde sıcak uygulama yapın"
           ],
-          "recommendation": "Kilo alımı, zayıflama, ani halsizlik, el titremesi gibi hormonal değişiklikler endokrin sistemi ilgilendirebilir. Bu tür belirtileriniz varsa mutlaka bir endokrinoloji uzmanına başvurmanızı tavsiye ederim. Diyabet gibi hastalıklar erken tanıyla daha kolay yönetilebilir."
+          "recommendation": "Kadın hastalıkları ve jinekolojik şikayetleriniz için kadın doğum uzmanına başvurmalısınız. Ani ve şiddetli ağrıda acil başvuru gereklidir."
+        }
+      },
+      {
+        "pattern": "(çocuk|ateş|döküntü|öksürük|ishal|karın ağrısı|kulak ağrısı|burun akıntısı|çocuk hastalıkları)",
+        "doctor": {
+          "name": "Dr. Ayla Demir",
+          "specialty": "Çocuk Sağlığı ve Hastalıkları Uzmanı",
+          "rating": 4.8,
+          "home_remedies": [
+            "Bol sıvı verin",
+            "Ateş düşürücü kullanımı için doktorunuza danışın",
+            "Çocuğunuzu dinlendirin"
+          ],
+          "recommendation": "Çocuklarda ateş, döküntü, öksürük ve benzeri şikayetlerde çocuk sağlığı ve hastalıkları uzmanına başvurmalısınız."
+        }
+      },
+      {
+        "pattern": "(kulak|kulak ağrısı|işitme kaybı|akıntı|çınlama|baş dönmesi|kulak tıkanıklığı)",
+        "doctor": {
+          "name": "Dr. Fikret Yılmaz",
+          "specialty": "Kulak Burun Boğaz Uzmanı",
+          "rating": 4.7,
+          "home_remedies": [
+            "Kulak temizliğine dikkat edin",
+            "Yüksek sesli ortamlardan kaçının"
+          ],
+          "recommendation": "Kulak ağrısı, işitme kaybı ve benzeri şikayetlerde KBB uzmanına başvurmalısınız."
+        }
+      },
+      {
+        "pattern": "(diş|diş ağrısı|diş eti|kanama|ağız|çürük|apse|şişlik)",
+        "doctor": {
+          "name": "Dr. Derya Akçay",
+          "specialty": "Diş Hekimi",
+          "rating": 4.8,
+          "home_remedies": [
+            "Dişlerinizi düzenli fırçalayın",
+            "Ağrı durumunda soğuk uygulama yapın"
+          ],
+          "recommendation": "Diş ağrısı, diş eti kanaması ve benzeri şikayetlerde diş hekimine başvurmalısınız."
         }
       }
     ],
     "all_doctors": [
-      {
-        "name": "Dr. Ayşe Yılmaz",
-        "specialty": "Dahiliye Uzmanı",
-        "rating": 4.8
-      },
-      {
-        "name": "Dr. Mehmet Demir",
-        "specialty": "Kardiyoloji Uzmanı",
-        "rating": 4.7
-      },
-      {
-        "name": "Dr. Elif Kaya",
-        "specialty": "Endokrinoloji Uzmanı",
-        "rating": 4.9
-      },
-      {
-        "name": "Dr. Ahmet Can",
-        "specialty": "Nöroloji Uzmanı",
-        "rating": 4.6
-      },
-      {
-        "name": "Dr. Zeynep Yıldız",
-        "specialty": "Dermatoloji Uzmanı",
-        "rating": 4.8
-      }
+      { "name": "Dr. Selim Aksoy", "specialty": "Gastroenteroloji Uzmanı", "rating": 4.7 },
+      { "name": "Dr. Ahmet Can", "specialty": "Nöroloji Uzmanı", "rating": 4.6 },
+      { "name": "Dr. Gülşah Yıldırım", "specialty": "Göğüs Hastalıkları Uzmanı", "rating": 4.8 },
+      { "name": "Dr. Mehmet Demir", "specialty": "Kardiyoloji Uzmanı", "rating": 4.7 },
+      { "name": "Dr. Zeynep Yıldız", "specialty": "Dermatoloji Uzmanı", "rating": 4.8 },
+      { "name": "Dr. Cihan Kaya", "specialty": "Fizik Tedavi ve Rehabilitasyon Uzmanı", "rating": 4.7 },
+      { "name": "Dr. Burak Uslu", "specialty": "Üroloji Uzmanı", "rating": 4.6 },
+      { "name": "Dr. Elif Kaya", "specialty": "Kadın Hastalıkları ve Doğum Uzmanı", "rating": 4.9 },
+      { "name": "Dr. Ayla Demir", "specialty": "Çocuk Sağlığı ve Hastalıkları Uzmanı", "rating": 4.8 },
+      { "name": "Dr. Fikret Yılmaz", "specialty": "Kulak Burun Boğaz Uzmanı", "rating": 4.7 },
+      { "name": "Dr. Derya Akçay", "specialty": "Diş Hekimi", "rating": 4.8 }
     ]
   }
   

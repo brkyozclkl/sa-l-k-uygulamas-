@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Klinik & Doktor Yönlendirme{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-start justify-content-center">
+            <!-- Sol: Açıklama ve ikonlar -->
+            <div class="col-lg-5 mb-5 mb-lg-0">
+                <h1 class="display-5 fw-bold mb-4 animate__animated animate__fadeInLeft">
+                    Klinik & <span class="text-primary">Doktor Yönlendirme</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                    Şikayetinize göre hem uygun polikliniği hem de uzman doktor önerilerini tek ekranda görün.
+                </p>
+                <div class="position-relative d-none d-lg-block">
+                    <div class="float-animation">
+                        <div class="hero-illustration">
+                            <div class="circle-bg bg-primary bg-opacity-10"></div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-effect p-3 rounded-4 shadow-sm mt-4">
+                    <i class="fas fa-info-circle fa-2x text-primary mb-2"></i>
+                    <h5 class="h6 mb-1">Yönlendirme Bilgisi</h5>
+                    <p class="text-muted small mb-0">
+                        Şikayetinizi seçin veya yazın, size hem uygun polikliniği hem de uzman doktorları önerelim.
+                    </p>
+                </div>
+            </div>
+            <!-- Sağ: Form ve Sonuçlar -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <form method="POST" action="{{ url_for('referral') }}">
+                            <div class="mb-3">
+                                <label for="select_complaint" class="form-label">Şikayetiniz</label>
+                                <select class="form-select mb-2" id="select_complaint" name="select_complaint">
+                                    <option value="">Şikayetinizi Seçiniz</option>
+                                    <option value="karın ağrısı" {% if complaint == 'karın ağrısı' %}selected{% endif %}>Karın Ağrısı</option>
+                                    <option value="mide bulantısı" {% if complaint == 'mide bulantısı' %}selected{% endif %}>Mide Bulantısı</option>
+                                    <option value="ishal" {% if complaint == 'ishal' %}selected{% endif %}>İshal</option>
+                                    <option value="kabızlık" {% if complaint == 'kabızlık' %}selected{% endif %}>Kabızlık</option>
+                                    <option value="baş ağrısı" {% if complaint == 'baş ağrısı' %}selected{% endif %}>Baş Ağrısı</option>
+                                    <option value="baş dönmesi" {% if complaint == 'baş dönmesi' %}selected{% endif %}>Baş Dönmesi</option>
+                                    <option value="nefes darlığı" {% if complaint == 'nefes darlığı' %}selected{% endif %}>Nefes Darlığı</option>
+                                    <option value="göğüs ağrısı" {% if complaint == 'göğüs ağrısı' %}selected{% endif %}>Göğüs Ağrısı</option>
+                                    <option value="çarpıntı" {% if complaint == 'çarpıntı' %}selected{% endif %}>Çarpıntı</option>
+                                    <option value="ateş" {% if complaint == 'ateş' %}selected{% endif %}>Ateş</option>
+                                    <option value="cilt döküntüsü" {% if complaint == 'cilt döküntüsü' %}selected{% endif %}>Cilt Döküntüsü</option>
+                                    <option value="kaşıntı" {% if complaint == 'kaşıntı' %}selected{% endif %}>Kaşıntı</option>
+                                    <option value="eklem ağrısı" {% if complaint == 'eklem ağrısı' %}selected{% endif %}>Eklem Ağrısı</option>
+                                    <option value="halsizlik" {% if complaint == 'halsizlik' %}selected{% endif %}>Halsizlik</option>
+                                    <option value="kilo kaybı" {% if complaint == 'kilo kaybı' %}selected{% endif %}>Kilo Kaybı</option>
+                                    <option value="kilo alma" {% if complaint == 'kilo alma' %}selected{% endif %}>Kilo Alma</option>
+                                    <option value="öksürük" {% if complaint == 'öksürük' %}selected{% endif %}>Öksürük</option>
+                                    <option value="boğaz ağrısı" {% if complaint == 'boğaz ağrısı' %}selected{% endif %}>Boğaz Ağrısı</option>
+                                    <option value="kulak ağrısı" {% if complaint == 'kulak ağrısı' %}selected{% endif %}>Kulak Ağrısı</option>
+                                    <option value="diş ağrısı" {% if complaint == 'diş ağrısı' %}selected{% endif %}>Diş Ağrısı</option>
+                                    <option value="idrar yolu şikayetleri" {% if complaint == 'idrar yolu şikayetleri' %}selected{% endif %}>İdrar Yolu Şikayetleri</option>
+                                    <option value="kadın hastalıkları" {% if complaint == 'kadın hastalıkları' %}selected{% endif %}>Kadın Hastalıkları</option>
+                                    <option value="çocuk hastalıkları" {% if complaint == 'çocuk hastalıkları' %}selected{% endif %}>Çocuk Hastalıkları</option>
+                                    <option value="diğer" {% if complaint == 'diğer' %}selected{% endif %}>Diğer</option>
+                                </select>
+                                <small class="text-muted">Yukarıda yoksa, şikayetinizi metin olarak yazabilirsiniz.</small>
+                                <input type="text" class="form-control mt-2" name="text_complaint" placeholder="Şikayetinizi yazınız..." value="{% if complaint not in ['karın ağrısı','baş ağrısı','nefes darlığı','göğüs ağrısı','ateş','cilt döküntüsü','eklem ağrısı','diğer'] %}{{ complaint }}{% endif %}">
+                                <small class="text-danger">* En az birini doldurmanız yeterlidir.</small>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Yönlendir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <!-- Klinik önerisi -->
+                    <div class="col-md-6">
+                        {% if recommended_clinic %}
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <div class="text-center mb-4">
+                                    <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mx-auto mb-3">
+                                        <i class="fas fa-hospital-symbol"></i>
+                                    </div>
+                                    <h3 class="h5 mb-3">Önerilen Poliklinik</h3>
+                                    <p class="lead text-primary mb-0">{{ recommended_clinic }}</p>
+                                </div>
+                                <div class="row g-4 mt-2">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <div>
+                                                <h6 class="mb-0">Çalışma Saatleri</h6>
+                                                <small class="text-muted">08:00 - 17:00</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-phone text-primary me-2"></i>
+                                            <div>
+                                                <h6 class="mb-0">İletişim</h6>
+                                                <small class="text-muted">0212 123 45 67</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                            <div>
+                                                <h6 class="mb-0">Konum</h6>
+                                                <small class="text-muted">Kat 3, B Blok</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- Doktor önerisi -->
+                    <div class="col-md-6">
+                        {% if matched_doctors %}
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                {% if matched_doctors[0].name and doctor_recommendation %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="h6 mb-1">{{ matched_doctors[0].name }}</h3>
+                                        <p class="text-muted mb-0">{{ matched_doctors[0].specialty }}</p>
+                                        <div class="text-warning">
+                                            {% for i in range(1, matched_doctors[0].rating|int + 1) %}<i class="fas fa-star"></i>{% endfor %}
+                                            {% if matched_doctors[0].rating - (matched_doctors[0].rating|int) >= 0.5 %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                                            <span class="text-muted ms-2">{{ matched_doctors[0].rating }}/5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <h5 class="mb-2 text-primary"><i class="fas fa-info-circle me-2"></i>Doktorun Önerisi</h5>
+                                <p class="text-muted">{{ doctor_recommendation }}</p>
+                                {% if home_remedies %}
+                                    <h5 class="mb-2 text-success mt-4"><i class="fas fa-home me-2"></i>Evde Yapılabilecekler</h5>
+                                    <ul class="list-unstyled">
+                                        {% for remedy in home_remedies %}
+                                            <li class="mb-2">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                {{ remedy }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <a href="#" class="btn btn-outline-primary w-100 mt-3">Randevu Al</a>
+                                {% else %}
+                                <div class="alert alert-info">Uygun doktor bulunamadı. Tüm doktorlar listeleniyor.</div>
+                                <ul class="list-unstyled">
+                                    {% for doc in matched_doctors %}
+                                    <li class="mb-2">
+                                        <strong>{{ doc.name }}</strong> - {{ doc.specialty }} ({{ doc.rating }}/5)
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .hero-illustration {
+        position: relative;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .circle-bg {
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .hero-illustration .feature-icon {
+        position: absolute;
+        z-index: 1;
+    }
+    .hero-illustration .feature-icon:nth-child(2) {
+        top: 10%;
+        left: 10%;
+        transform: rotate(-15deg);
+    }
+    .hero-illustration .feature-icon:nth-child(3) {
+        top: 20%;
+        right: 10%;
+        transform: rotate(15deg);
+    }
+</style>
+{% endblock %} 

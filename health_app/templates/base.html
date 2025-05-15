@@ -566,25 +566,11 @@
                             <a class="nav-link dropdown-toggle {% if request.endpoint in ['doctor_recommendation', 'blood_analysis', 'clinic_referral', 'health_library'] %}active{% endif %}" href="#" id="smartServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-brain me-2"></i>Akıllı Servisler
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="smartServicesDropdown">
+                            <ul class="dropdown-menu" aria-labelledby="smartServicesDropdown">                               
+                                
                                 <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'doctor_recommendation' %}active{% endif %}" href="{{ url_for('doctor_recommendation') }}">
-                                        <i class="fas fa-user-md me-2"></i>Doktor Önerileri
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'blood_analysis' %}active{% endif %}" href="{{ url_for('blood_analysis') }}">
-                                        <i class="fas fa-vial me-2"></i>Kan Tahlili Analizi
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'clinic_referral' %}active{% endif %}" href="{{ url_for('clinic_referral') }}">
-                                        <i class="fas fa-hospital-user me-2"></i>Klinik Yönlendirme
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item {% if request.endpoint == 'clinic_referral' %}active{% endif %}" href="{{ url_for('clinic_referral') }}">
-                                        <i class="fas fa-stethoscope me-2"></i>Poliklinik Öner
+                                    <a class="dropdown-item {% if request.endpoint == 'referral' %}active{% endif %}" href="{{ url_for('referral') }}">
+                                        <i class="fas fa-hospital-user me-2"></i>Klinik & Doktor Yönlendirme
                                     </a>
                                 </li>
                                 <li>

@@ -6,87 +6,142 @@
 <section class="py-5">
     <div class="container">
         <div class="row align-items-center justify-content-center">
-            <!-- Left: Title, Description, Icons -->
             <div class="col-lg-6 mb-5 mb-lg-0">
                 <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
                     Kan Tahlili <span class="text-primary">Analizi</span>
                 </h1>
                 <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
-                    Yapay zeka destekli sistemimiz, kan tahlili sonuçlarınızı analiz eder ve size detaylı bir sağlık raporu sunar.
+                    Kan tahlili değerlerinizi girin, yapay zeka destekli analiz ve önerileri hemen görün.
                 </p>
-                <div class="position-relative d-none d-lg-block">
-                    <div class="float-animation">
-                        <div class="hero-illustration">
-                            <div class="circle-bg bg-primary bg-opacity-10"></div>
-                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                <i class="fas fa-vial"></i>
-                            </div>
-                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                <i class="fas fa-robot"></i>
+                {% if blood_tests and blood_tests|length > 0 %}
+                <div class="mb-3">
+                    <label for="testSelect" class="form-label">Geçmiş Kan Testini Seç</label>
+                    <select class="form-select" id="testSelect">
+                        <option value="">Test seçiniz...</option>
+                        {% for test in blood_tests %}
+                        <option value="{{ test.id }}" data-results='{{ test.results_data|tojson|safe }}'>{{ test.date.strftime('%d.%m.%Y') }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <form method="POST" class="mt-4" id="bloodForm">
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Hemogram</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="hgb" class="form-label">Hemoglobin (HGB)</label>
+                                    <input type="number" step="0.1" class="form-control" id="hgb" name="hgb" placeholder="13.5-17.5">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="hct" class="form-label">Hematokrit (HCT)</label>
+                                    <input type="number" step="0.1" class="form-control" id="hct" name="hct" placeholder="38.8-50">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="wbc" class="form-label">Beyaz Kan Hücresi (WBC)</label>
+                                    <input type="number" step="0.1" class="form-control" id="wbc" name="wbc" placeholder="4-11">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="rbc" class="form-label">Kırmızı Kan Hücresi (RBC)</label>
+                                    <input type="number" step="0.1" class="form-control" id="rbc" name="rbc" placeholder="4.5-6">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="plt" class="form-label">Trombosit (PLT)</label>
+                                    <input type="number" class="form-control" id="plt" name="plt" placeholder="150-450">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="mcv" class="form-label">MCV</label>
+                                    <input type="number" step="0.1" class="form-control" id="mcv" name="mcv" placeholder="80-100">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="glass-effect p-3 rounded-4 shadow-sm mt-4">
-                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                    <h5 class="h6 mb-1">Analiz Sonucu</h5>
-                    <p class="text-muted small mb-0">
-                        Sonuçlarınız genel olarak normal aralıkta görünmektedir. Detaylı rapor için doktorunuza danışmanızı öneririz.
-                    </p>
-                </div>
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Biyokimya</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="glucose" class="form-label">Glukoz</label>
+                                    <input type="number" class="form-control" id="glucose" name="glucose" placeholder="70-100">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="urea" class="form-label">Üre</label>
+                                    <input type="number" class="form-control" id="urea" name="urea" placeholder="10-50">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="creatinine" class="form-label">Kreatinin</label>
+                                    <input type="number" step="0.1" class="form-control" id="creatinine" name="creatinine" placeholder="0.7-1.3">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="alt" class="form-label">ALT</label>
+                                    <input type="number" class="form-control" id="alt" name="alt" placeholder="0-41">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="ast" class="form-label">AST</label>
+                                    <input type="number" class="form-control" id="ast" name="ast" placeholder="0-40">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="cholesterol" class="form-label">Kolesterol</label>
+                                    <input type="number" class="form-control" id="cholesterol" name="cholesterol" placeholder="<200">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="hdl" class="form-label">HDL</label>
+                                    <input type="number" class="form-control" id="hdl" name="hdl" placeholder=">40">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="ldl" class="form-label">LDL</label>
+                                    <input type="number" class="form-control" id="ldl" name="ldl" placeholder="<100">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="triglycerides" class="form-label">Trigliserit</label>
+                                    <input type="number" class="form-control" id="triglycerides" name="triglycerides" placeholder="<150">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">Vitamin ve Mineraller</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="vitamin_d" class="form-label">D Vitamini</label>
+                                    <input type="number" step="0.1" class="form-control" id="vitamin_d" name="vitamin_d" placeholder="30-100">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="vitamin_b12" class="form-label">B12 Vitamini</label>
+                                    <input type="number" class="form-control" id="vitamin_b12" name="vitamin_b12" placeholder="200-900">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="iron" class="form-label">Demir</label>
+                                    <input type="number" class="form-control" id="iron" name="iron" placeholder="50-170">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="ferritin" class="form-label">Ferritin</label>
+                                    <input type="number" class="form-control" id="ferritin" name="ferritin" placeholder="30-400">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="folic_acid" class="form-label">Folat</label>
+                                    <input type="number" step="0.1" class="form-control" id="folic_acid" name="folic_acid" placeholder="2.7-17">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Analiz Et</button>
+                    </div>
+                </form>
             </div>
-            <!-- Right: Analysis Results -->
             <div class="col-lg-6">
-                <div class="row g-4">
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-tint"></i>
-                                </div>
-                                <h3 class="h5 mb-3">Hemoglobin</h3>
-                                <div class="stats-counter mb-2">{{ 13.8 + (range(0,3)|random) }}</div>
-                                <p class="text-muted mb-0">g/dL</p>
-                                <div class="progress mt-3" style="height: 4px;">
-                                    <div class="progress-bar bg-success" style="width: 85%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-microscope"></i>
-                                </div>
-                                <h3 class="h5 mb-3">WBC</h3>
-                                <div class="stats-counter mb-2">{{ 6.2 + (range(0,2)|random) }}</div>
-                                <p class="text-muted mb-0">10³/µL</p>
-                                <div class="progress mt-3" style="height: 4px;">
-                                    <div class="progress-bar bg-success" style="width: 75%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card h-100 border-0 shadow-sm mb-4">
-                            <div class="card-body p-4">
-                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="fas fa-droplet"></i>
-                                </div>
-                                <h3 class="h5 mb-3">Platelet</h3>
-                                <div class="stats-counter mb-2">{{ 250 + (range(0,50)|random) }}</div>
-                                <p class="text-muted mb-0">10³/µL</p>
-                                <div class="progress mt-3" style="height: 4px;">
-                                    <div class="progress-bar bg-success" style="width: 90%"></div>
-                                </div>
-                            </div>
-                        </div>
+                {% if analysis_result %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="mb-3 text-primary"><i class="fas fa-robot me-2"></i>Otomatik Analiz Sonucu</h4>
+                        <pre style="white-space: pre-wrap;">{{ analysis_result }}</pre>
                     </div>
                 </div>
+                {% else %}
+                <div class="alert alert-info">Kan tahlili değerlerinizi girip "Analiz Et" butonuna basın.</div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -140,4 +195,44 @@
         transform: translateX(-50%) rotate(0deg);
     }
 </style>
+
+<script>
+// Geçmiş testten formu doldur
+const testSelect = document.getElementById('testSelect');
+if (testSelect) {
+    testSelect.addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        if (!selected.value) return;
+        try {
+            const results = JSON.parse(selected.dataset.results);
+            // Hemogram
+            if (results.hemogram) {
+                for (const key in results.hemogram) {
+                    if (document.getElementById(key)) {
+                        document.getElementById(key).value = results.hemogram[key] || '';
+                    }
+                }
+            }
+            // Biyokimya
+            if (results.biyokimya) {
+                for (const key in results.biyokimya) {
+                    if (document.getElementById(key)) {
+                        document.getElementById(key).value = results.biyokimya[key] || '';
+                    }
+                }
+            }
+            // Vitamin ve mineraller
+            if (results.vitamin_mineral) {
+                for (const key in results.vitamin_mineral) {
+                    if (document.getElementById(key)) {
+                        document.getElementById(key).value = results.vitamin_mineral[key] || '';
+                    }
+                }
+            }
+        } catch (e) {
+            alert('Test verisi okunamadı.');
+        }
+    });
+}
+</script>
 {% endblock %} 

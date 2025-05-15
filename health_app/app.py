@@ -509,34 +509,119 @@ def delete_meal(meal_id):
     
     return redirect(url_for('meals'))
 
-@app.route('/clinic-referral', methods=['GET', 'POST'])
-def clinic_referral():
-    complaint = None
-    recommended_clinic = None
+@app.route('/referral', methods=['GET', 'POST'])
+def referral():
+    # Klinik yönlendirme için şikayet haritası (detaylı ve çoklu bölüm)
     complaint_map = {
-        'karın ağrısı': 'Dahiliye (İç Hastalıkları)',
-        'baş ağrısı': 'Nöroloji',
-        'nefes darlığı': 'Göğüs Hastalıkları',
-        'göğüs ağrısı': 'Kardiyoloji',
-        'ateş': 'Enfeksiyon Hastalıkları',
-        'cilt döküntüsü': 'Dermatoloji',
-        'eklem ağrısı': 'Fizik Tedavi ve Rehabilitasyon',
+        'karın ağrısı': 'Dahiliye, Gastroenteroloji, Genel Cerrahi',
+        'mide bulantısı': 'Dahiliye, Gastroenteroloji',
+        'ishal': 'Dahiliye, Gastroenteroloji, Enfeksiyon',
+        'kabızlık': 'Dahiliye, Gastroenteroloji',
+        'baş ağrısı': 'Nöroloji, Beyin Cerrahisi, Göz Hastalıkları',
+        'baş dönmesi': 'Nöroloji, KBB, Kardiyoloji',
+        'nefes darlığı': 'Göğüs Hastalıkları, Kardiyoloji, Acil',
+        'göğüs ağrısı': 'Kardiyoloji, Göğüs Hastalıkları, Acil',
+        'çarpıntı': 'Kardiyoloji, Dahiliye',
+        'ateş': 'Enfeksiyon Hastalıkları, Dahiliye, Çocuk Hastalıkları',
+        'cilt döküntüsü': 'Dermatoloji, Alerji, Enfeksiyon',
+        'kaşıntı': 'Dermatoloji, Alerji',
+        'eklem ağrısı': 'Fizik Tedavi, Romatoloji, Ortopedi',
+        'halsizlik': 'Dahiliye, Endokrinoloji',
+        'kilo kaybı': 'Endokrinoloji, Dahiliye',
+        'kilo alma': 'Endokrinoloji, Dahiliye',
+        'öksürük': 'Göğüs Hastalıkları, KBB, Çocuk Hastalıkları',
+        'boğaz ağrısı': 'KBB, Dahiliye, Çocuk Hastalıkları',
+        'kulak ağrısı': 'KBB',
+        'diş ağrısı': 'Diş Hekimliği',
+        'idrar yolu şikayetleri': 'Üroloji, Kadın Doğum, Dahiliye',
+        'kadın hastalıkları': 'Kadın Doğum',
+        'çocuk hastalıkları': 'Çocuk Sağlığı ve Hastalıkları',
         'diğer': 'Aile Hekimliği'
     }
+    # Doktor verisi yükle
+    try:
+        with open('health_app/doctor_data.json', 'r', encoding='utf-8') as f:
+            doctor_data = json.load(f)
+            keyword_doctor_map = [(item['pattern'], item['doctor']) for item in doctor_data['keyword_doctor_map']]
+            all_doctors = doctor_data['all_doctors']
+    except FileNotFoundError:
+        flash('Doktor verileri yüklenemedi.', 'error')
+        keyword_doctor_map = []
+        all_doctors = []
+    # Klinik ve doktor önerileri için değişkenler
+    complaint = None
+    recommended_clinic = None
+    matched_doctors = []
+    home_remedies = []
+    doctor_recommendation = None
+    # POST ise formdan gelen verileri işle
     if request.method == 'POST':
-        complaint = request.form.get('complaint')
+        select_complaint = request.form.get('select_complaint', '').strip()
+        text_complaint = request.form.get('text_complaint', '').strip()
+        complaint = select_complaint if select_complaint else text_complaint
+        if not complaint:
+            flash('Lütfen bir şikayet seçin veya yazın.', 'warning')
+            return render_template('referral.html', complaint=complaint, recommended_clinic=None, matched_doctors=[], home_remedies=[], doctor_recommendation=None)
+        # Klinik yönlendirme
         recommended_clinic = complaint_map.get(complaint, None)
-    return render_template('clinic_referral.html', complaint=complaint, recommended_clinic=recommended_clinic)
+        # Doktor önerisi
+        for pattern, doc in keyword_doctor_map:
+            if re.search(pattern, complaint, re.IGNORECASE):
+                matched_doctors = [doc]
+                home_remedies = doc.get('home_remedies', [])
+                doctor_recommendation = doc.get('recommendation', '')
+                break
+        if not matched_doctors:
+            matched_doctors = all_doctors
+            home_remedies = []
+            doctor_recommendation = None
+            flash('Şikayetinizle tam eşleşen bir uzman bulunamadı. Tüm doktorlar listeleniyor.', 'warning')
+    return render_template('referral.html', complaint=complaint, recommended_clinic=recommended_clinic, matched_doctors=matched_doctors, home_remedies=home_remedies, doctor_recommendation=doctor_recommendation)
 
-@app.route('/blood-analysis')
+@app.route('/blood-analysis', methods=['GET', 'POST'])
 def blood_analysis():
-    return render_template('blood_analysis.html')
+    analysis_result = None
+    blood_tests = []
+    if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated:
+        blood_tests = TestResult.query.filter_by(user_id=current_user.id).order_by(TestResult.date.desc()).all()
+    if request.method == 'POST':
+        # Formdan değerleri al
+        results = {
+            'hemogram': {
+                'hgb': request.form.get('hgb'),
+                'hct': request.form.get('hct'),
+                'wbc': request.form.get('wbc'),
+                'rbc': request.form.get('rbc'),
+                'plt': request.form.get('plt'),
+                'mcv': request.form.get('mcv')
+            },
+            'biyokimya': {
+                'glucose': request.form.get('glucose'),
+                'urea': request.form.get('urea'),
+                'creatinine': request.form.get('creatinine'),
+                'alt': request.form.get('alt'),
+                'ast': request.form.get('ast'),
+                'cholesterol': request.form.get('cholesterol'),
+                'hdl': request.form.get('hdl'),
+                'ldl': request.form.get('ldl'),
+                'triglycerides': request.form.get('triglycerides')
+            },
+            'vitamin_mineral': {
+                'vitamin_d': request.form.get('vitamin_d'),
+                'vitamin_b12': request.form.get('vitamin_b12'),
+                'iron': request.form.get('iron'),
+                'ferritin': request.form.get('ferritin'),
+                'folic_acid': request.form.get('folic_acid')
+            }
+        }
+        analysis_result = analyze_blood_test(results)
+    return render_template('blood_analysis.html', analysis_result=analysis_result, blood_tests=blood_tests)
 
 @app.route('/doctor-recommendation', methods=['GET', 'POST'])
 def doctor_recommendation():
     # Load doctor data from JSON file
     try:
-        with open('doctor_data.json', 'r', encoding='utf-8') as f:
+        with open('health_app/doctor_data.json', 'r', encoding='utf-8') as f:
             doctor_data = json.load(f)
             keyword_doctor_map = [(item['pattern'], item['doctor']) for item in doctor_data['keyword_doctor_map']]
             all_doctors = doctor_data['all_doctors']
@@ -932,7 +1017,7 @@ def chronic_tracking_data():
 def mood_stress_test():
     # Load test data from JSON file
     try:
-        with open('mood_test_data.json', 'r', encoding='utf-8') as f:
+        with open('health_app/mood_test_data.json', 'r', encoding='utf-8') as f:
             test_data = json.load(f)
             questions = test_data['questions']
             feedback_data = test_data['feedback']
@@ -1103,7 +1188,7 @@ def health_goals():
 @app.route('/health-library')
 def health_library():
     try:
-        with open('health_library_data.json', 'r', encoding='utf-8') as f:
+        with open('health_app/health_library_data.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
             contents = data['contents']
     except FileNotFoundError:
