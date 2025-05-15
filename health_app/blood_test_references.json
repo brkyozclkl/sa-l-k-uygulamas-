@@ -1,0 +1,196 @@
+{
+    "hemogram": {
+        "hgb": {
+            "name": "Hemoglobin (HGB)",
+            "unit": "g/dL",
+            "reference_range": {
+                "min": 12,
+                "max": 17
+            },
+            "low": {
+                "comment": "Hemoglobin (HGB) düşük (Referans: 12-17 g/dL). Bu durum anemi belirtisi olabilir.",
+                "recommendations": [
+                    "Demir açısından zengin besinler tüketin (kırmızı et, karaciğer, yumurta)",
+                    "C vitamini içeren besinlerle birlikte demir içeren besinleri tüketin",
+                    "Çay ve kahve tüketimini yemeklerden 2 saat sonraya bırakın",
+                    "Doktorunuza danışarak demir takviyesi kullanmayı düşünebilirsiniz"
+                ]
+            },
+            "high": {
+                "comment": "Hemoglobin (HGB) yüksek (Referans: 12-17 g/dL). Bu durum polisitemi veya dehidrasyon belirtisi olabilir.",
+                "recommendations": [
+                    "Günlük su tüketiminizi artırın (en az 2-2.5 litre)",
+                    "Düzenli egzersiz yapın",
+                    "Sigara kullanıyorsanız bırakmayı düşünün"
+                ]
+            },
+            "normal": {
+                "comment": "Hemoglobin (HGB) değeriniz normal aralıkta (12-17 g/dL)."
+            }
+        },
+        "wbc": {
+            "name": "Beyaz Kan Hücresi (WBC)",
+            "unit": "x10^9/L",
+            "reference_range": {
+                "min": 4,
+                "max": 11
+            },
+            "low": {
+                "comment": "Beyaz kan hücresi (WBC) düşük (Referans: 4-11 x10^9/L). Bağışıklık sisteminiz zayıf olabilir.",
+                "recommendations": [
+                    "Düzenli uyku uyuyun (7-8 saat)",
+                    "Stresten uzak durun",
+                    "Hijyen kurallarına dikkat edin"
+                ]
+            },
+            "high": {
+                "comment": "Beyaz kan hücresi (WBC) yüksek (Referans: 4-11 x10^9/L). Enfeksiyon veya iltihap belirtisi olabilir.",
+                "recommendations": [
+                    "Dinlenmeye özen gösterin",
+                    "Bol sıvı tüketin",
+                    "Ateşiniz varsa doktorunuza başvurun",
+                    "Enfeksiyon belirtileri varsa antibiyotik kullanımı için doktorunuza danışın"
+                ]
+            },
+            "normal": {
+                "comment": "Beyaz kan hücresi (WBC) değeriniz normal aralıkta (4-11 x10^9/L)."
+            }
+        }
+    },
+    "biyokimya": {
+        "glucose": {
+            "name": "Açlık Glukozu",
+            "unit": "mg/dL",
+            "reference_range": {
+                "min": 70,
+                "max": 100
+            },
+            "low": {
+                "comment": "Açlık glukozu düşük (Referans: 70-100 mg/dL). Hipoglisemi riski olabilir.",
+                "recommendations": [
+                    "Düzenli ve sık öğünler tüketin",
+                    "Kompleks karbonhidratları tercih edin",
+                    "Şekerli gıdalardan kaçının",
+                    "Öğün atlamamaya dikkat edin"
+                ]
+            },
+            "high": {
+                "comment": "Açlık glukozu yüksek (Referans: 70-100 mg/dL). İnsülin direnci veya diyabet riski olabilir.",
+                "recommendations": [
+                    "Rafine şeker ve karbonhidratlardan kaçının",
+                    "Lifli gıdalar tüketin",
+                    "Düzenli egzersiz yapın",
+                    "Kilo kontrolüne dikkat edin",
+                    "Doktorunuza danışarak OGTT testi yaptırabilirsiniz"
+                ]
+            },
+            "normal": {
+                "comment": "Açlık glukozu değeriniz normal aralıkta (70-100 mg/dL)."
+            }
+        }
+    },
+    "lipid": {
+        "cholesterol": {
+            "name": "Total Kolesterol",
+            "unit": "mg/dL",
+            "reference_range": {
+                "max": 200
+            },
+            "high": {
+                "comment": "Kolesterol yüksek (Referans: <200 mg/dL).",
+                "recommendations": [
+                    "Doymuş yağlardan kaçının",
+                    "Zeytinyağı gibi sağlıklı yağları tercih edin",
+                    "Haftada en az 2 kez balık tüketin",
+                    "Lifli gıdalar tüketin",
+                    "Düzenli egzersiz yapın"
+                ]
+            }
+        },
+        "hdl": {
+            "name": "HDL Kolesterol",
+            "unit": "mg/dL",
+            "reference_range": {
+                "min": 40
+            },
+            "low": {
+                "comment": "HDL kolesterol düşük (Referans: >40 mg/dL).",
+                "recommendations": [
+                    "Düzenli egzersiz yapın (özellikle kardiyovasküler egzersizler)",
+                    "Omega-3 içeren besinler tüketin",
+                    "Sigara kullanıyorsanız bırakın",
+                    "Alkol tüketimini sınırlayın"
+                ]
+            }
+        },
+        "ldl": {
+            "name": "LDL Kolesterol",
+            "unit": "mg/dL",
+            "reference_range": {
+                "max": 100
+            },
+            "high": {
+                "comment": "LDL kolesterol yüksek (Referans: <100 mg/dL).",
+                "recommendations": [
+                    "Doymuş yağlardan kaçının",
+                    "Trans yağlardan uzak durun",
+                    "Lifli gıdalar tüketin",
+                    "Düzenli egzersiz yapın",
+                    "Kilo kontrolüne dikkat edin"
+                ]
+            }
+        }
+    },
+    "vitamin_mineral": {
+        "vitamin_d": {
+            "name": "D Vitamini",
+            "unit": "ng/mL",
+            "reference_range": {
+                "min": 30
+            },
+            "low": {
+                "comment": "D vitamini düşük (Referans: >30 ng/mL).",
+                "recommendations": [
+                    "Güneş ışığından yararlanın (günde 15-20 dakika)",
+                    "Yağlı balık, yumurta sarısı ve mantar tüketin",
+                    "Doktorunuza danışarak D vitamini takviyesi kullanmayı düşünebilirsiniz"
+                ]
+            }
+        },
+        "vitamin_b12": {
+            "name": "B12 Vitamini",
+            "unit": "pg/mL",
+            "reference_range": {
+                "min": 200
+            },
+            "low": {
+                "comment": "B12 vitamini düşük (Referans: >200 pg/mL).",
+                "recommendations": [
+                    "Kırmızı et, balık, yumurta ve süt ürünleri tüketin",
+                    "Vejetaryenseniz, B12 takviyesi için doktorunuza danışın",
+                    "Düzenli olarak B12 seviyenizi kontrol ettirin"
+                ]
+            }
+        }
+    },
+    "lifestyle_recommendations": {
+        "lipid_abnormal": [
+            "Akdeniz tipi beslenmeyi benimseyin",
+            "Haftada en az 150 dakika orta şiddette egzersiz yapın",
+            "Stres yönetimi için meditasyon veya yoga yapın",
+            "Düzenli uyku uyuyun",
+            "Sigara ve alkolden uzak durun"
+        ],
+        "vitamin_deficiency": [
+            "Dengeli ve çeşitli beslenin",
+            "Mevsiminde sebze ve meyve tüketin",
+            "Düzenli olarak vitamin seviyelerinizi kontrol ettirin"
+        ],
+        "all_normal": [
+            "Mevcut sağlıklı yaşam tarzınızı sürdürün",
+            "Düzenli check-up yaptırmaya devam edin",
+            "Dengeli beslenme ve düzenli egzersiz alışkanlığınızı koruyun",
+            "Stres yönetimi ve yeterli uyku için özen gösterin"
+        ]
+    }
+} 
