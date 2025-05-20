@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Lottie Web (Animasyonlar için) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
     
     <style>
         :root {
@@ -628,46 +630,6 @@
         </div>
     </main>
 
-    <!-- Chatbot Widget -->
-    <div class="chat-widget" id="chatWidget">
-        <div class="chat-header" id="chatHeader">
-            <div class="d-flex align-items-center">
-                <div class="chat-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="ms-3">
-                    <h6 class="mb-0">Sağlık Asistanı</h6>
-                    <small class="text-muted">Size nasıl yardımcı olabilirim?</small>
-                </div>
-            </div>
-            <button class="btn btn-link text-white" id="minimizeChat">
-                <i class="fas fa-minus"></i>
-            </button>
-        </div>
-        <div class="chat-body" id="chatBody">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot-message">
-                    <div class="message-content">
-                        Merhaba! Ben sağlık asistanınızım. Size nasıl yardımcı olabilirim?
-                    </div>
-                    <div class="message-time">Şimdi</div>
-                </div>
-            </div>
-        </div>
-        <div class="chat-footer">
-            <div class="input-group">
-                <input type="text" class="form-control" id="chatInput" placeholder="Mesajınızı yazın...">
-                <button class="btn btn-primary" id="sendMessage">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Chat Toggle Button -->
-    <button class="chat-toggle-btn" id="chatToggle">
-        <i class="fas fa-comments"></i>
-    </button>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -713,74 +675,6 @@
             if (link.getAttribute('href') === window.location.pathname) {
                 link.classList.add('active');
             }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatWidget = document.getElementById('chatWidget');
-            const chatToggle = document.getElementById('chatToggle');
-            const minimizeChat = document.getElementById('minimizeChat');
-            const chatInput = document.getElementById('chatInput');
-            const sendMessage = document.getElementById('sendMessage');
-            const chatMessages = document.getElementById('chatMessages');
-
-            // Initially hide chat widget
-            chatWidget.style.display = 'none';
-
-            // Toggle chat widget
-            chatToggle.addEventListener('click', function() {
-                chatWidget.style.display = chatWidget.style.display === 'none' ? 'flex' : 'none';
-                chatToggle.classList.toggle('hidden');
-            });
-
-            // Minimize chat widget
-            minimizeChat.addEventListener('click', function() {
-                chatWidget.classList.toggle('minimized');
-            });
-
-            // Send message function
-            function sendUserMessage() {
-                const message = chatInput.value.trim();
-                if (message) {
-                    // Add user message
-                    addMessage(message, 'user');
-                    chatInput.value = '';
-
-                    // Simulate bot response (to be replaced with actual AI integration)
-                    setTimeout(() => {
-                        addMessage('Bu özellik yakında aktif olacak!', 'bot');
-                    }, 1000);
-                }
-            }
-
-            // Add message to chat
-            function addMessage(text, type) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${type}-message`;
-                
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'message-content';
-                contentDiv.textContent = text;
-                
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'message-time';
-                timeDiv.textContent = 'Şimdi';
-                
-                messageDiv.appendChild(contentDiv);
-                messageDiv.appendChild(timeDiv);
-                
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            // Send message on button click
-            sendMessage.addEventListener('click', sendUserMessage);
-
-            // Send message on Enter key
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendUserMessage();
-                }
-            });
         });
     </script>
     {% block scripts %}{% endblock %}

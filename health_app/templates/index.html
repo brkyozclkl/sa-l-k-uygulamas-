@@ -10,42 +10,117 @@
             <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">
                 Sağlığınızı <span class="text-primary">Akıllıca</span> Takip Edin
             </h1>
-            <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
-                Tahlil sonuçlarınızı yükleyin, analiz edin ve sağlık durumunuzu takip edin. 
-                Yapay zeka destekli sağlık asistanımız size kişiselleştirilmiş öneriler sunar.
+            <p class="lead mb-3 animate__animated animate__fadeInLeft animate__delay-1s">
+                Kişisel sağlık asistanınız ile tahlil, beslenme, ruh hali ve daha fazlasını tek platformda yönetin. Akıllı analizler, öneriler ve kolay takip ile sağlığınız hep kontrol altında!
             </p>
-            <div class="d-flex gap-3 animate__animated animate__fadeInLeft animate__delay-2s">
-                {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-chart-line me-2"></i>Dashboard'a Git
-                    </a>
-                    <a href="{{ url_for('calorie_calculator') }}" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-calculator me-2"></i>Kalori Hesapla
-                    </a>
-                {% else %}
-                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-user-plus me-2"></i>Hemen Başla
-                    </a>
-                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
-                    </a>
-                {% endif %}
-            </div>
+            <ul class="mb-4 animate__animated animate__fadeInLeft animate__delay-1s" style="list-style:none;padding-left:0;">
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Tahlil Sonucu Analizi & Takibi</li>
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Klinik & Doktor Yönlendirme</li>
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Duygu & Stres Testi</li>
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Kronik Hastalık Takibi</li>
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Sağlık Hedefleri & Günlük Takip</li>
+                <li><i class="fas fa-check-circle text-primary me-2"></i> Sağlık Kütüphanesi</li>
+            </ul>
         </div>
         <div class="col-lg-6 d-none d-lg-block">
-            <div class="position-relative">
-                <div class="float-animation">
-                    <div class="hero-illustration">
-                        <div class="circle-bg bg-primary bg-opacity-10"></div>
-                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+            <div class="position-relative h-100 d-flex align-items-center justify-content-center">
+                <!-- Sağlık temalı animasyon (Lottie veya dönen ikonlar) -->
+                <div id="healthLottie" style="width:340px; height:340px;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hizmetlerimiz Section (Yukarı Taşındı ve Öne Çıkarıldı) -->
+<section class="py-3 bg-light" style="margin-top:-32px;">
+    <div class="container">
+        <h2 class="text-center mb-5">Hizmetlerimiz</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-vial"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Tahlil Sonucu Analizi</h3>
+                        <p class="text-muted small mb-0">Kan tahlili ve biyokimya sonuçlarınızı yükleyin, otomatik analiz ve kişisel öneriler alın.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Klinik & Doktor Yönlendirme</h3>
+                        <p class="text-muted small mb-0">Şikayetlerinize göre en uygun klinik ve doktor önerilerini alın.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Duygu & Stres Testi</h3>
+                        <p class="text-muted small mb-0">Psikolojik durumunuzu ölçün, kişiselleştirilmiş analiz ve öneriler alın.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-notes-medical"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Kronik Hastalık Takibi</h3>
+                        <p class="text-muted small mb-0">Diyabet, hipertansiyon gibi kronik hastalıklarınızı ve ölçümlerinizi kolayca takip edin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Sağlık Hedefleri & Günlük Takip</h3>
+                        <p class="text-muted small mb-0">Adım, su, uyku, kilo ve kalori hedeflerinizi belirleyin, günlük ilerlemenizi kaydedin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Sağlık Kütüphanesi</h3>
+                        <p class="text-muted small mb-0">Güvenilir sağlık içerikleri ve sık sorulan sorulara kolay erişim.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3 class="h6 mb-2">Kalori & Öğün Takibi</h3>
+                        <p class="text-muted small mb-0">Günlük kalori ihtiyacınızı hesaplayın, öğünlerinizi ve besinlerinizi kolayca takip edin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 mx-auto">
                             <i class="fas fa-heartbeat"></i>
                         </div>
-                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                            <i class="fas fa-stethoscope"></i>
-                        </div>
-                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
-                            <i class="fas fa-file-medical"></i>
-                        </div>
+                        <h3 class="h6 mb-2">Akıllı Kriz Analizleri</h3>
+                        <p class="text-muted small mb-0">Yapay zeka ile diyabet ve kalp krizi riskinizi analiz edin, erken önlem alın.</p>
                     </div>
                 </div>
             </div>
@@ -114,8 +189,8 @@
     </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="py-5 bg-light">
+<!-- How It Works Section (Güncel) -->
+<section class="py-5 bg-white">
     <div class="container">
         <h2 class="text-center mb-5">Nasıl Çalışır?</h2>
         <div class="row g-4">
@@ -124,8 +199,8 @@
                     <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
                         <span class="h4 mb-0">1</span>
                     </div>
-                    <h3 class="h5">Kayıt Olun</h3>
-                    <p class="text-muted">Hızlı ve ücretsiz kayıt olun</p>
+                    <h3 class="h6">Kayıt Olun</h3>
+                    <p class="text-muted small">Hızlı ve ücretsiz kayıt olun, profilinizi oluşturun.</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -133,8 +208,8 @@
                     <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
                         <span class="h4 mb-0">2</span>
                     </div>
-                    <h3 class="h5">Tahlil Yükleyin</h3>
-                    <p class="text-muted">PDF formatında tahlil sonuçlarınızı yükleyin</p>
+                    <h3 class="h6">Veri Ekleyin</h3>
+                    <p class="text-muted small">Tahlil, öğün, ruh hali, kronik ölçüm gibi sağlık verilerinizi girin veya yükleyin.</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -142,8 +217,8 @@
                     <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
                         <span class="h4 mb-0">3</span>
                     </div>
-                    <h3 class="h5">Analiz Edin</h3>
-                    <p class="text-muted">Sonuçlarınızı detaylı olarak inceleyin</p>
+                    <h3 class="h6">Analiz & Takip</h3>
+                    <p class="text-muted small">Verileriniz otomatik analiz edilir, sağlık trendleriniz ve riskleriniz izlenir.</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -151,8 +226,8 @@
                     <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
                         <span class="h4 mb-0">4</span>
                     </div>
-                    <h3 class="h5">Öneriler Alın</h3>
-                    <p class="text-muted">Kişiselleştirilmiş sağlık önerileri alın</p>
+                    <h3 class="h6">Kişisel Öneriler</h3>
+                    <p class="text-muted small">Yapay zeka destekli kişiselleştirilmiş öneriler ve yönlendirmeler alın.</p>
                 </div>
             </div>
         </div>
@@ -267,5 +342,32 @@
         left: 50%;
         transform: translateX(-50%) rotate(0deg);
     }
+
+    .quick-service-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        border-radius: 18px;
+    }
+    .quick-service-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 32px rgba(255,107,107,0.13);
+        background: var(--primary-light);
+    }
 </style>
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+<script>
+    // Lottie animasyonu yükle
+    var healthLottie = document.getElementById('healthLottie');
+    if (healthLottie) {
+        lottie.loadAnimation({
+            container: healthLottie,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://lottie.host/6e1e1e7b-2e7e-4b7e-8e2e-6e1e1e7b2e7e/health.json' // Sağlık temalı bir lottie animasyonu URL'si
+        });
+    }
+</script>
+{% endblock %}
 {% endblock %} 
